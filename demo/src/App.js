@@ -11,7 +11,7 @@ import './App.css';
 import {
   Tooltip,
   withTooltip,
-} from './Tooltip';
+} from '../../src';
 import {
   contentSelector
 } from './state';

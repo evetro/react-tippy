@@ -1,22 +1,22 @@
 {
   "name": "react-tippy",
-  "version": "1.4.0",
-  "description": "React tippy",
+  "version": "2.0.0",
+  "description": "Tooltip component for React based on Popper v2",
   "main": "dist/react-tippy.js",
   "files": [
     "dist",
     "index.d.ts"
   ],
-  "author": "Khoa Thai",
+  "author": "Khoa Thai; Evetro AS",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tvkhoa/react-tippy.git"
+    "url": "https://github.com/evetro/react-tippy.git"
   },
   "bugs": {
-    "url": "https://github.com/tvkhoa/react-tippy/issues"
+    "url": "https://github.com/evetro/react-tippy/issues"
   },
-  "homepage": "https://github.com/tvkhoa/react-tippy",
+  "homepage": "https://github.com/evetro/react-tippy",
   "devDependencies": {
     "babel": "^6.23.0",
     "babel-core": "^6.24.0",

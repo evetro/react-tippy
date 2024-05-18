@@ -11,5 +11,5 @@ export default {
 			'@package': path.resolve('../src')
 		}
 	},
-	root: '.'
+	root: './demo'
 }

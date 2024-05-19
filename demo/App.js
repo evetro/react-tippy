@@ -7,7 +7,6 @@ import {
   connect,
 } from 'react-redux';
 
-import logo from './logo.svg';
 import {
   Tooltip,
   withTooltip,
@@ -19,7 +18,6 @@ import {
 const ManualPopover = ({ children, open, onRequestClose, content }) => {
   return (
     <Tooltip
-      useContext
       html={content}
       position={"bottom"}
       open={open}
@@ -134,109 +132,6 @@ class App extends Component {
       open,
       setIsOpen,
     } = this.props;
-    /** @todo remove useContext prop, signalises use of state variable */
-    return (
-      <div className="App">
-        <div className="App-header" onClick={() => {setDisabled(!disabled)}}>
-          <img src={logo} className="App-logo" alt="logo" />
-        </div>
-        <NormalHeader />
-        <hr />
-        <HeaderWithTootip />
-        <hr />
-        <Tooltip
-          title="Welcome to React"
-          tag="span"
-          trigger="mouseenter focus click"
-          duration={300}
-        >
-          <p>
-            Hover here to show popup
-          </p>
-        </Tooltip>
-        <hr />
-        <Tooltip
-          title="Welcome to React"
-          position="bottom"
-          trigger="mouseenter"
-          duration={3000}
-          unmountHTMLWhenHide
-        >
-          <p>
-            Hover here to show popup
-          </p>
-        </Tooltip>
-        <hr />
-        <Tooltip
-          title="Sticky"
-          trigger="mouseenter"
-          sticky
-          interactiveBorder={10}
-        >
-          <p
-            style={{
-              animation: 'hover 2s ease-in-out infinite',
-            }}
-          >
-            Sticky
-          </p>
-        </Tooltip>
-        <button onClick={() => { console.log('call open'); setIsOpen(true) }}>
-          Do something
-        </button>
-        <hr />
-        <Tooltip
-          disabled={disabled}
-          title={tooltipContent}
-          open={open}
-          onRequestClose={() => {console.log('call'); setIsOpen(false)}}
-        >
-          <span className="App-intro" onClick={() => { console.log('call open'); setIsOpen(true) }}>
-            Big Tooltip with dynamic content: {tooltipContent} {open.toString()} {disabled.toString()}
-          </span>
-        </Tooltip>
-        <hr />
-
-        {!disabled && (
-          <Tooltip
-            trigger="click"
-            tabIndex={0}
-            unmountHTMLWhenHide
-            useContext
-            html={(
-              <TooltipContent />
-            )}
-          >
-            Click here
-          </Tooltip>
-        )}
-
-        <hr />
-        <Tooltip
-          trigger="click"
-          interactive
-          position="right"
-          animateFill={false}
-          transitionFlip={false}
-          html={(
-            <div style={{ width: 400 }}>
-              <p>{tooltipContent}</p>
-              <input
-                type="text"
-                value={tooltipContent}
-                onChange={(e) => {setTooltipContent(e.target.value)}}
-              />
-            </div>
-          )}
-        >
-          <span className="App-intro" >
-            Interactive tooltip
-          </span>
-        </Tooltip>
-
-        <Example />
-      </div>
-    );
   }
 }
 

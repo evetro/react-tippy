@@ -8,7 +8,6 @@ import {
 } from 'react-redux';
 
 import logo from './logo.svg';
-import './App.css';
 import {
   Tooltip,
   withTooltip,

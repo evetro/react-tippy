@@ -6,12 +6,13 @@ import {
 import {
   connect,
 } from 'react-redux';
+
 import logo from './logo.svg';
 import './App.css';
 import {
   Tooltip,
   withTooltip,
-} from '../../src';
+} from '../src';
 import {
   contentSelector
 } from './state';

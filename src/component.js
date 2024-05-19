@@ -230,10 +230,8 @@ class Tooltip extends Component {
         tag: this.props.tag,
         touchHold: this.props.touchHold,
         onRequestClose: this.props.onRequestClose,
-        useContext: this.props.useContext,
-        reactInstance: this.props.useContext ? this : undefined,
         performance: true,
-        html: this.props.rawTemplate ? this.props.rawTemplate : undefined,
+        html: undefined,
         zIndex: this.props.zIndex
       });
       if (this.props.open) {

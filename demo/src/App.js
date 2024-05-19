@@ -134,6 +134,7 @@ class App extends Component {
       open,
       setIsOpen,
     } = this.props;
+    /** @todo remove useContext prop, signalises use of state variable */
     return (
       <div className="App">
         <div className="App-header" onClick={() => {setDisabled(!disabled)}}>
@@ -144,7 +145,6 @@ class App extends Component {
         <HeaderWithTootip />
         <hr />
         <Tooltip
-          // options
           title="Welcome to React"
           tag="span"
           trigger="mouseenter focus click"
@@ -156,7 +156,6 @@ class App extends Component {
         </Tooltip>
         <hr />
         <Tooltip
-          // options
           title="Welcome to React"
           position="bottom"
           trigger="mouseenter"
@@ -169,17 +168,6 @@ class App extends Component {
         </Tooltip>
         <hr />
         <Tooltip
-          trigger="click"
-          tabIndex={0}
-          unmountHTMLWhenHide
-          useContext
-          rawTemplate={document.querySelector('#rawHTML')}
-        >
-          Raw html
-        </Tooltip>
-        <hr />
-        <Tooltip
-          // options
           title="Sticky"
           trigger="mouseenter"
           sticky

@@ -22,7 +22,6 @@ export interface TooltipProps {
   title?: string;
   disabled?: boolean;
   open?: boolean;
-  useContext?: boolean;
   onRequestClose?: () => void;
   position?: Position;
   trigger?: Trigger;

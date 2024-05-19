@@ -10,7 +10,6 @@ import init from './core/init'
 
 /* Utility functions */
 import defer                   from './utils/defer'
-import prefix                  from './utils/prefix'
 import find                    from './utils/find'
 import findIndex               from './utils/findIndex'
 import removeTitle             from './utils/removeTitle'
@@ -132,24 +131,13 @@ class Tippy {
     if (!data) return;
 
     const {
-      useContext,
       setReactDOMValue,
     } = data.settings;
 
-    if (useContext) {
-      setReactDOMValue(
-        ReactDOM.createPortal(
-          updatedContent,
-          tooltipContent,
-        )
-      );
-    } else {
-      ReactDOM.render(
-        updatedContent,
-        tooltipContent,
-      );
-    }
-
+    ReactDOM.render(
+      updatedContent,
+      tooltipContent,
+    );
   }
   /**
   * Shows a popper

@@ -13,12 +13,11 @@
     "import",
     "react",
     "react-hooks",
-    "security",
     "@typescript-eslint"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 13,
+    "ecmaVersion": 6,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
@@ -27,7 +26,7 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": false
+    "node": true
   },
   "settings": {
     "react": {
@@ -37,7 +36,7 @@
   "rules": {
     "security/detect-object-injection": "off",
     "no-use-before-define": ["off"],
-    "no-console": "off",
+    "no-console": "error",
     "import/newline-after-import": ["error", { "count": 1 }]
   }
 }

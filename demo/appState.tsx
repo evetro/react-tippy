@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode, useMemo, useReducer } from 'react'
+import { createContext, useContext, ReactNode, useMemo, useReducer } from 'react'
 
 import { StateUpdater, NextState, StateDispatcher, AppState, AppStore } from './types'
 

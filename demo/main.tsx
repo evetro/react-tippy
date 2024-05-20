@@ -1,9 +1,8 @@
-import React from 'react'
 import ReactDOM from 'react-dom'
+import '@package/tippy.css'
 
-import App from './App'
+import App from './src'
 import { AppProvider } from './appState'
-import '../src/tippy.css'
 
 ReactDOM.render(
 	<AppProvider><App /></AppProvider>,

@@ -1,4 +1,5 @@
-import Tooltip from '@package'
+import { ChangeEventHandler } from 'react'
+import { Tooltip } from '@package'
 
 import Example from './Example'
 import TooltipContent from './TooltipContent'
@@ -9,7 +10,9 @@ import { useAppStore } from '../appState'
 export default function App() {
 	const [{ tooltipContent, disabled, open }, setAppState] = useAppStore()
 
-	const setTooltipContent = (e) => { setAppState({ tooltipContent: e.target.value }) }
+	const setTooltipContent: ChangeEventHandler<HTMLInputElement> = (e) => {
+		setAppState({ tooltipContent: e.target.value })
+	}
 	const openOn = () => {
 		console.log('open')
 		setAppState({ open: true })

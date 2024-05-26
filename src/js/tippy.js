@@ -1,33 +1,33 @@
+import ReactDOM from 'react-dom'
+
 import {
   Browser,
   Store,
   Selectors,
   Defaults
 } from './core/globals'
-import ReactDOM from 'react-dom'
-
 import init from './core/init'
 
 /* Utility functions */
-import defer                   from './utils/defer'
-import find                    from './utils/find'
-import findIndex               from './utils/findIndex'
-import removeTitle             from './utils/removeTitle'
-import elementIsInViewport     from './utils/elementIsInViewport'
-import triggerReflow           from './utils/triggerReflow'
-import modifyClassList         from './utils/modifyClassList'
-import getInnerElements        from './utils/getInnerElements'
+import defer from './utils/defer'
+import find from './utils/find'
+import findIndex from './utils/findIndex'
+import removeTitle from './utils/removeTitle'
+import elementIsInViewport from './utils/elementIsInViewport'
+import triggerReflow from './utils/triggerReflow'
+import modifyClassList from './utils/modifyClassList'
+import getInnerElements from './utils/getInnerElements'
 import applyTransitionDuration from './utils/applyTransitionDuration'
-import isVisible               from './utils/isVisible'
-import noop                    from './utils/noop'
+import isVisible from './utils/isVisible'
+import noop from './utils/noop'
 
 /* Core library functions */
 import followCursorHandler from './core/followCursorHandler'
-import getArrayOfElements  from './core/getArrayOfElements'
-import onTransitionEnd     from './core/onTransitionEnd'
-import mountPopper         from './core/mountPopper'
-import makeSticky          from './core/makeSticky'
-import createTooltips      from './core/createTooltips'
+import getArrayOfElements from './core/getArrayOfElements'
+import onTransitionEnd from './core/onTransitionEnd'
+import mountPopper from './core/mountPopper'
+import makeSticky from './core/makeSticky'
+import createTooltips from './core/createTooltips'
 
 /**
 * @param {String|Element|Element[]} selector
@@ -265,8 +265,8 @@ class Tippy {
     const { tooltip, circle, content } = getInnerElements(popper)
 
     // custom react
-    // Prevent hide if open
-    if (data.settings.disabled === false && data && data.settings.open) {
+    // Prevent hide if open // TODO check if compatible with ES2015
+    if (data?.settings?.disabled === false && data?.settings?.open) {
       return;
     }
 

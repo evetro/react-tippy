@@ -4,7 +4,7 @@ import { Tooltip } from '@package'
 import Example from './Example'
 import TooltipContent from './TooltipContent'
 import { HeaderWithTootip, NormalHeader } from './headers'
-import logo from './logo.svg'
+import logo from '../logo.svg'
 import { useAppStore } from '../appState'
 
 export default function App() {

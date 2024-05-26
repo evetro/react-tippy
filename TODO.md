@@ -4,6 +4,10 @@ The demo application and the package itself are to be rewritten with React 17, V
 
 The following two props from the original repo will not be supported in the new version presented in this repository: *useContext*; *rawTemplate*. These props in particular facilitate leaking abstractions, and therefore do not fit the general interace of a library.
 
+## Status on repo
+
+As of the day of this commit, we've gotten the rewritten demo app using React Context and TypeScript to compile and run correctly.
+
 ## PRs on source repository
 
 *x* denotes that the PR code has been integrated into this fork

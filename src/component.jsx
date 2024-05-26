@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
+
 import tippy from './js/tippy';
-import {Browser} from './js/core/globals';
+import { Browser } from './js/core/globals';
 
 const stopPortalEvent = e => e.stopPropagation();
 
@@ -55,7 +56,7 @@ const detectPropsChanged = (props, prevProps) => {
   return result;
 }
 
-class Tooltip extends Component {
+class Tooltip extends React.Component {
   constructor(props) {
     super(props);
     this.initTippy = this._initTippy.bind(this);
@@ -137,7 +138,7 @@ class Tooltip extends Component {
     }
     if (this.tippy) {
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
-      this.tippy.show(popper, this.props.duration);
+      setTimeout(() => this.tippy.show(popper, this.props.duration), 0);
     }
   }
 
@@ -147,7 +148,7 @@ class Tooltip extends Component {
     }
     if (this.tippy) {
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
-      this.tippy.hide(popper, this.props.hideDuration);
+      setTimeout(() => { this.tippy.hide(popper, this.props.hideDuration); }, 0);
     }
   }
 

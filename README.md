@@ -179,6 +179,29 @@ You can use `interactive` prop and `html` for your interactive tooltip
 </Tooltip>
 ```
 
+## Show/hide your tooltip manually 2
+
+```javascript
+
+const [open, setOpen] = useState(false)
+
+// ...
+
+<Tooltip
+  open={open}
+  title="Peekaboo!"
+>
+  <button
+    onClick={() => {
+      setOpen(state => !state)
+      setTimeout(() => alert('can do things after delay'), 2000)
+    }}
+  >
+  Clicking me will initiate manual open/close tooltip logic
+  </button>
+</Tooltip>
+```
+
 ## Browser support
 
 Tippy gracefully degrades on older browsers (and with JavaScript disabled) by using the browser's default title tooltip.

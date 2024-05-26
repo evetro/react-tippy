@@ -2,6 +2,7 @@
   "name": "react-tippy",
   "version": "2.0.0",
   "description": "Tooltip component for React based on Popper v2",
+  "type": "module",
   "main": "dist/react-tippy.js",
   "files": [
     "dist",
@@ -46,7 +47,6 @@
     "vitest": "^1.6.0"
   },
   "scripts": {
-    "dev": "vite --config ./demo/vite.config.ts",
     "build": "vite build",
     "test": "vitest",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts .",

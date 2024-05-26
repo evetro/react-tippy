@@ -1,0 +1,21 @@
+{
+  "name": "react-tippy-demo",
+  "version": "2.0.0",
+  "description": "Tooltip component for React based on Popper v2",
+  "type": "module",
+  "author": "Khoa Thai; Evetro AS",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/evetro/react-tippy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/evetro/react-tippy/issues"
+  },
+  "homepage": "https://github.com/evetro/react-tippy",
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint --ext .jsx,.js,.tsx,.ts .",
+    "version": "echo \"2.0.0\""
+  }
+}

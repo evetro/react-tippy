@@ -1,12 +1,12 @@
-import getIndividualSettings    from './getIndividualSettings'
-import createPopperElement      from './createPopperElement'
-import createTrigger            from './createTrigger'
+import getIndividualSettings from './getIndividualSettings'
+import createPopperElement  from './createPopperElement'
+import createTrigger from './createTrigger'
 import getEventListenerHandlers from './getEventListenerHandlers'
-import evaluateSettings         from './evaluateSettings'
+import evaluateSettings from './evaluateSettings'
 
 import removeTitle from '../utils/removeTitle'
 
-import { Store } from './globals'
+// import { Store } from './globals'
 
 let idCounter = 1
 
@@ -31,7 +31,6 @@ export default function createTooltips(els) {
     if (!title && !html && !reactDOM) return a
 
     el.setAttribute('data-tooltipped', '')
-    el.setAttribute('aria-describedby', `tippy-tooltip-${id}`)
     removeTitle(el)
 
     const popper = createPopperElement(id, title, settings)

@@ -27,5 +27,5 @@ As of 26.05.24, we've gotten the rewritten demo app using React Context and Type
  - [ ] [114 Fix issues related to title and html props](https://github.com/tvkhoa/react-tippy/pull/114)
  - [x] [98 added a more robust (but succinct) e.g. of showing/hiding tooltip in readme](https://github.com/tvkhoa/react-tippy/pull/98)
  - [ ] [91 Update doc for tooltip custom theme](https://github.com/tvkhoa/react-tippy/pull/91/files)
- - [ ] [90 Set and remove element aria-describedby base on popper](https://github.com/tvkhoa/react-tippy/pull/90)
+ - [x] [90 Set and remove element aria-describedby base on popper](https://github.com/tvkhoa/react-tippy/pull/90)
  - [x] [87 Fix transitions (especially on manual triggering)](https://github.com/tvkhoa/react-tippy/pull/87)

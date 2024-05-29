@@ -115,8 +115,8 @@ const HeaderWithTooltip = withTooltip(Header, {
 |onShown|noop|function|Callback when the tooltip has fully transitioned in and is showing|
 |onHide|noop|function|Callback when the tooltip has begun to transition out|
 |onHidden|noop|function|Callback when the tooltip has fully transitioned out and is hidden|
-|theme|`dark`|`dark` `light` `transparent`|The CSS styling theme.|
-|className|''|string|className of container|
+|theme|`dark`|`dark` `light` `transparent` `any_custom_theme`|The CSS styling theme for the tooltip component|
+|className|''|string|className of the tooltip trigger element|
 |style|{}|React inline style (object)|style of container|
 
 ## Custom tooltip content
@@ -168,6 +168,9 @@ You can use `interactive` prop and `html` for your interactive tooltip
 ## Show/hide your tooltip manually
 
 ```javascript
+
+const [open, setIsOpen] = React.useState(false)
+
 <Tooltip
   title={tooltipContent}
   open={open}
@@ -224,7 +227,9 @@ Tooltips have ARIA labelling to ensure accessibility.
 
 ## Is it possible to change the tooltip style (width, height, et cetera)?
 
-You may change css to have your tooltip width. If you use `html` props, you can do like this:
+The props `className` and `style` are used for customizing the trigger element of the tooltip.
+If you want to customize the markup of the tooltip itself, you may use the props
+`html` instead of `title`. In the following example, the width of tooltip is set to 400 pixels.
 
 ```javascript
 html={(
@@ -232,6 +237,24 @@ html={(
     // content here
   </div>
 )}
+```
+
+## Can I add a theme or otherwise customize the styles of every tooltip component in my app?
+
+If you want to customize all tooltips, or even use your own theme, you can create your css theme as here
+https://atomiks.github.io/tippyjs/themes/#creating-a-theme
+
+create a custom theme like this
+```css
+.my-custom-theme { /* must be end with -theme */
+  border: 5px solid red;
+}
+```
+
+then pass it as theme (they can have multiple themes)
+```js
+<Tooltip
+  theme="my-custom light" // <- react-tippy will auto add postfix -theme so remove it here
 ```
 
 # License

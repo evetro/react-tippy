@@ -25,10 +25,10 @@ export default function createTooltips(els) {
         : getIndividualSettings(el, this.settings)
     )
 
-    const { html, reactDOM, trigger, touchHold } = settings
+    const { reactDOM, trigger, touchHold } = settings
 
     const title = el.getAttribute('title')
-    if (!title && !html && !reactDOM) return a
+    if (!title && !reactDOM) return a
 
     el.setAttribute('data-tooltipped', '')
     removeTitle(el)

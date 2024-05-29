@@ -297,14 +297,14 @@ class Tooltip extends React.Component {
             onMouseOver={stopPortalEvent}
             onMouseOut={stopPortalEvent}
             onMouseUp={stopPortalEvent}
-    
+
             onKeyDown={stopPortalEvent}
             onKeyPress={stopPortalEvent}
             onKeyUp={stopPortalEvent}
-    
+
             onFocus={stopPortalEvent}
             onBlur={stopPortalEvent}
-    
+
             onChange={stopPortalEvent}
             onInput={stopPortalEvent}
             onInvalid={stopPortalEvent}

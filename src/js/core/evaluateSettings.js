@@ -1,15 +1,15 @@
 /**
-* Evaluates/modifies the settings object for appropriate behavior
+* Evaluates and mutates the given settings object parameter for appropriate behavior
 * @param {Object} settings
 * @return {Object} modified/evaluated settings
 */
 export default function evaluateSettings(settings) {
-  // animateFill is disabled if an arrow is true
+  // animateFill should be disabled if `arrow` is set to true
   if (settings.arrow) {
-    settings.animateFill = false
+    Object.assign(settings, { animateFill: false })
   }
 
-  // reassign appendTo into the result of evaluating appendTo
+  // reassign appendTo onto the result of evaluating appendTo
   // if it's set as a function instead of Element
   if (settings.appendTo && typeof settings.appendTo === 'function') {
     settings.appendTo = settings.appendTo()

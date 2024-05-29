@@ -22,8 +22,8 @@ export type Size = "small" | "regular" | "big"
 
 export type Theme = "dark" | "light" | "transparent"
 
-// TODO implement "appendTo" feature with 'appendTo' prop in TooltipProps
 export interface TooltipProps {
+	appendTo?: HTMLElement | (() => HTMLElement)
 	title?: string
 	disabled?: boolean
 	open?: boolean
@@ -34,7 +34,7 @@ export interface TooltipProps {
 	interactive?: boolean
 	interactiveBorder?: number
 	delay?: number | [number, number]
-	hideOnScroll?: boolean;
+	hideOnScroll?: boolean
 	hideDelay?: number
 	animation?: Animation
 	arrow?: boolean
@@ -67,7 +67,7 @@ export interface TooltipProps {
 	className?: string
 	style?: React.CSSProperties
 	children?: React.ReactNode
-	zIndex?: number;
+	zIndex?: number
 	tag?: 'div' | 'span' | 'a'
-	touchHold?: boolean;
+	touchHold?: boolean
 }

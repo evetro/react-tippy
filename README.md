@@ -82,8 +82,8 @@ const HeaderWithTooltip = withTooltip(Header, {
 |Setting|Default|Options|Role|
 |--- |--- |--- |--- |
 |disabled|`false`|`true` `false`|Show or not show tooltip|
-|open|`undefined`|`true` `false`|Just only use it if you want to `show/hide it manually`. Usually, you don't need it|
-|onRequestClose|`noop function`|Function|Just only use it if you want to `show/hide it manually`. This event is fired when you click outside of your tooltip, should be used with the prop `interaction` to keep your tooltip showing|
+|open|`undefined`|`true` `false`|Use it only if you want to `show/hide it manually`. Usually, you don't need it|
+|onRequestClose|`noop function`|Function|Use it only if you want to `show/hide it manually`. This event is fired when you click outside of your tooltip, should be used with the prop `interaction` to keep your tooltip showing|
 |position|`top`|`top` `bottom` `left` `right`|Specifies which direction to position the tooltip on the element. Add the suffix `-start` or `-end` to shift the position. `top-end` is an example.|
 |trigger|`mouseenter focus`|`mouseenter` `focus` `click` `manual`|Specifies which type of events will trigger a tooltip to show. Separate each by a space. mouseenter is for hovering and touch on mobile, and focus is for keyboard navigation. Use manual if you want to show/hide the tooltip manually/programmatically (see below).|
 |tabIndex|`undefined`|number|set tabIndex so element can receive focus|
@@ -119,10 +119,11 @@ const HeaderWithTooltip = withTooltip(Header, {
 |theme|`dark`|`dark` `light` `transparent` `any_custom_theme`|The CSS styling theme for the tooltip component|
 |className|''|string|className of the tooltip trigger element|
 |style|{}|React inline style (object)|style of container|
+|appendTo|`document.body`|function or DOM element|HTML Element to which the tooltip is attached. You can either pass a DOM element or a callback function which returns a DOM element|
 
 ## Custom tooltip content
 
-You need to pass element to option `html`
+You may pass markup to the `html` prop:
 
 ```javascript
 import {
@@ -145,7 +146,8 @@ import {
 ```
 
 ## Interactive html tooltip
-You can use `interactive` prop and `html` for your interactive tooltip
+
+You may use `interactive` and `html` to make your tooltip interactive:
 
 ```javascript
   <Tooltip

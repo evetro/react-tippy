@@ -2,7 +2,7 @@
 
 The demo application and the package itself are to be rewritten with React 17,
 Vite and TS. Before the TS+hooks rewrite of the core module, we shall also be
-looking into 15 of the unresolved PRs in the abandoned parent library and
+looking into some of the unresolved PRs in the abandoned parent library and
 port their code changes into the fork manually.
 
 The following two props from the original repo will not be supported in the new
@@ -26,14 +26,13 @@ changes with removing the props *useContext* and *rawTemplate* will be applied.
 
 *[v]* denotes that the PR code has been integrated into this fork
 
- - [ ] [178 Add appendTo feature in Tooltip](https://github.com/tvkhoa/react-tippy/pull/178)
+ - [x] [178 Add appendTo feature in Tooltip](https://github.com/tvkhoa/react-tippy/pull/178)
  - [x] [176 Add children prop to TooltipProps interface](https://github.com/tvkhoa/react-tippy/pull/176)
  - [x] [174 Event function classes for props](https://github.com/tvkhoa/react-tippy/pull/174)
  - [x] [171 Added more typings for props](https://github.com/tvkhoa/react-tippy/pull/171)
  - [x] [165 Check if data-original-title exists before assign it to the title attribute](https://github.com/tvkhoa/react-tippy/pull/165)
  - [x] [163 Add zIndex prop to type definition](https://github.com/tvkhoa/react-tippy/pull/163)
  - [x] [151 Fix type for delay prop](https://github.com/tvkhoa/react-tippy/pull/151)
- - [ ] [139 Add possibility to cancel from onShow event](https://github.com/tvkhoa/react-tippy/pull/139)
  - [x] [133 corrected type for stickyDuration](https://github.com/tvkhoa/react-tippy/pull/133)
  - [x] [132 Feat: add possibility to hide tooltip on window scroll](https://github.com/tvkhoa/react-tippy/pull/132)
  - [x] [114 Fix issues related to title and html props](https://github.com/tvkhoa/react-tippy/pull/114)

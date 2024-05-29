@@ -35,7 +35,7 @@ changes with removing the props *useContext* and *rawTemplate* will be applied.
  - [x] [151 Fix type for delay prop](https://github.com/tvkhoa/react-tippy/pull/151)
  - [ ] [139 Add possibility to cancel from onShow event](https://github.com/tvkhoa/react-tippy/pull/139)
  - [x] [133 corrected type for stickyDuration](https://github.com/tvkhoa/react-tippy/pull/133)
- - [ ] [132 Feat: add possibility to hide tooltip on window scroll](https://github.com/tvkhoa/react-tippy/pull/132)
+ - [x] [132 Feat: add possibility to hide tooltip on window scroll](https://github.com/tvkhoa/react-tippy/pull/132)
  - [x] [114 Fix issues related to title and html props](https://github.com/tvkhoa/react-tippy/pull/114)
  - [x] [98 added a more robust (but succinct) e.g. of showing/hiding tooltip in readme](https://github.com/tvkhoa/react-tippy/pull/98)
  - [x] [91 Update doc for tooltip custom theme](https://github.com/tvkhoa/react-tippy/pull/91/files)

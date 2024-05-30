@@ -19,8 +19,12 @@ PopperJS to work.
 As of 26.05.24, we've gotten the rewritten demo app using React Context and
 TypeScript to compile and run correctly. Getting the documentation in the README
 file up to speed will have immediate top priority going forward. After that,
-the ramaining PRs in the list will be attended to, and then our breaking API
+the linked PRs in the list below will be attended to, and the breaking API
 changes with removing the props *useContext* and *rawTemplate* will be applied.
+We will also write unit tests of the core and utility modules where they will
+be applicable. Next comes the TypeScript rewrite of the source code. Then,
+the Popper package dependency shall be updated. And that will be it for
+version 2.
 
 ## PRs from source repository
 

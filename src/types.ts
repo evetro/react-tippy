@@ -23,51 +23,51 @@ export type Size = "small" | "regular" | "big"
 export type Theme = "dark" | "light" | "transparent"
 
 export interface TooltipProps {
-	appendTo?: HTMLElement | (() => HTMLElement)
-	title?: string
-	disabled?: boolean
-	open?: boolean
-	onRequestClose?: () => void
-	position?: Position
-	trigger?: Trigger
-	tabIndex?: number
-	interactive?: boolean
-	interactiveBorder?: number
-	delay?: number | [number, number]
-	hideOnScroll?: boolean
-	hideDelay?: number
+	animateFill?: boolean
 	animation?: Animation
 	arrow?: boolean
 	arrowSize?: Size
-	animateFill?: boolean
-	duration?: number
-	hideDuration?: number
+	appendTo?: HTMLElement | (() => HTMLElement)
+	beforeHidden?: () => void
+	beforeShown?: () => void
+	children?: React.ReactNode
+	className?: string
+	delay?: number | [number, number]
+	disabled?: boolean
 	distance?: number
-	offset?: number
-	hideOnClick?: boolean | "persistent"
-	multiple?: boolean
+	duration?: number
 	followCursor?: boolean
-	inertia?: boolean
-	transitionFlip?: boolean
-	popperOptions?: any // TODO define structure PopperOptions for v2
+	hidden?: () => void
+	hideDelay?: number
+	hideDuration?: number
+	hideOnClick?: boolean | "persistent"
+	hideOnScroll?: boolean
 	html?: React.ReactElement<any>
-	unmountHTMLWhenHide?: boolean
+	inertia?: boolean
+	interactive?: boolean
+	interactiveBorder?: number
+	multiple?: boolean
+	offset?: number
+	onHidden?: () => void
+	onHide?: () => void
+	onRequestClose?: () => void
+	onShow?: () => void
+	onShown?: () => void
+	open?: boolean
+	popperOptions?: any // TODO define structure PopperOptions for v2
+	position?: Position
+	shown?: () => void
 	size?: Size
 	sticky?: boolean
 	stickyDuration?: number
-	beforeShown?: () => void
-	shown?: () => void
-	beforeHidden?: () => void
-	hidden?: () => void
-	onShow?: () => void
-	onShown?: () => void,
-	onHide?: () => void
-	onHidden?: () => void,
-	theme?: Theme
-	className?: string
 	style?: React.CSSProperties
-	children?: React.ReactNode
-	zIndex?: number
+	tabIndex?: number
 	tag?: 'div' | 'span' | 'a'
+	theme?: Theme
+	title?: string
 	touchHold?: boolean
+	transitionFlip?: boolean
+	trigger?: Trigger
+	unmountHTMLWhenHide?: boolean
+	zIndex?: number
 }

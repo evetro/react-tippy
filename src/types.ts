@@ -37,7 +37,6 @@ export interface TooltipProps {
 	distance?: number
 	duration?: number
 	followCursor?: boolean
-	hidden?: () => void
 	hideDelay?: number
 	hideDuration?: number
 	hideOnClick?: boolean | "persistent"
@@ -56,7 +55,6 @@ export interface TooltipProps {
 	open?: boolean
 	popperOptions?: any // TODO define structure PopperOptions for v2
 	position?: Position
-	shown?: () => void
 	size?: Size
 	sticky?: boolean
 	stickyDuration?: number

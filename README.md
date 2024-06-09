@@ -2,7 +2,7 @@
 
 [![React Version](https://img.shields.io/badge/react-16.x-blue)](https://reactjs.org/)
 
-A lightweight tooltip for React. Demo at [Demo page here...](https://tvkhoa.github.io/testlib)
+A lightweight tooltip for React. [Demo page here...](https://tvkhoa.github.io/testlib)
 
 Based on `tippy.js` and powered by `Popper.js`
 
@@ -13,7 +13,7 @@ Based on `tippy.js` and powered by `Popper.js`
 
 It is designed to work friendly with React, it provides `<Tooltip>` element or a higher-order component.
 
-It uses `React DOM` to render tooltip content. Therefore, you can fully use it in your React project without doubt.
+It uses `React DOM` to render tooltip content. Therefore, you can safely use this library in your React project.
 
 It is an enhancement of Tippy.js for using in React.
 
@@ -96,7 +96,7 @@ const HeaderWithTooltip = withTooltip(Header, {
 |hideDelay|`0`|Any integer >= 0 (milliseconds)|Specifies how long it takes after a leave event is fired for a tooltip to hide. Not applicable when clicking on the document to hide tooltips.|
 |hideOnClick|`true`|`true` `false` `'persistent'`|Specifies whether to hide a tooltip upon clicking its element after hovering over.|
 |hideOnScroll|`false`|`true` `false`|Specifies whether to hide a tooltip on scroll event.|
-|html|`null`|react element|Tooltip content. If you don't define html, the title will be used|
+|html|`null`|react element|Tooltip content. Overrides the **title** prop if defined|
 |inertia|`false`|`true` `false`|Modifies the transition-timing-function with a cubic bezier to create a "slingshot" intertial effect.|
 |interactive|`false`|`true` `false`|Makes a tooltip interactive, i.e. will not close when the user hovers over or clicks on the tooltip. This lets you create a popover (similar to Bootstrap) when used in conjunction with a click trigger.|
 |interactiveBorder|`2`|Any number (pixels)|Specifies the size of the invisible border around an interactive tooltip that will prevent it from closing. Only applies to `mouseenter` triggered tooltips.|
@@ -117,7 +117,8 @@ const HeaderWithTooltip = withTooltip(Header, {
 |tabIndex|`undefined`|number|set tabIndex so element can receive focus|
 |tag|`div`|A HTML element tag name e.g. `span`|Specifies the HTML element used to wrap the content that triggers the tooltip. When using a tooltip inline, `span` is more likely to be valid markup. When using a higher-order component with a block-level element, a `div` or `a` is more likely to be valid markup.|
 |theme|`dark`|`dark` `light` `transparent` `any_custom_theme`|The CSS styling theme for the tooltip component|
-|touchHold|`false`|`true` `false`|Changes the trigger behavior on touch devices. It will change it from a tap to show and tap off to hide, to a tap and hold to show, and a release to hide.|
+|title|`null`|String|The shown text for the tooltip component|
+|touchHold|`false`|`true` `false`|Changes the trigger behavior on touch devices. Changes the control from tap to show and tap off to hide, to tap and hold to show, then a release to hide.|
 |transitionFlip|`true`|`true` `false`|Specifies whether to transition between flips or not. Uses the same transition timing as duration|
 |trigger|`mouseenter focus`|`mouseenter` `focus` `click` `manual`|Specifies which type of events will trigger a tooltip to show. Separate each by a space. mouseenter is for hovering and touch on mobile, and focus is for keyboard navigation. Use manual if you want to show/hide the tooltip manually/programmatically (see below).|
 |unmountHTMLWhenHide|`false`|`true` `false`|By default, html component will be mounted at first show and unmount only when your tooltip component is unmounted. When you set unmountHTMLWhenHide is `true`, it will be unmounted whenever tooltip is hidden.|
@@ -264,4 +265,4 @@ then pass it as theme (they can have multiple themes)
 
 # License
 
-MIT. See also the licence for Popper.js'.
+MIT. See also the licence for Popper.js.

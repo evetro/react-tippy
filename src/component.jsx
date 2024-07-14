@@ -48,16 +48,6 @@ const defaultProps = {
 
 const propKeys = Object.keys(defaultProps);
 
-const detectPropsChanged = (props, prevProps) => {
-  const result = [];
-  propKeys.forEach(key => {
-    if (props[key] !== prevProps[key]) {
-      result.push(key);
-    }
-  })
-  return result;
-}
-
 class Tooltip extends React.Component {
   constructor(props) {
     super(props);
@@ -89,10 +79,10 @@ class Tooltip extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // enable and disabled
     if (typeof window === 'undefined' || typeof document === 'undefined' ) {
       return;
     }
+
     if (this.props.disabled === false && prevProps.disabled === true) {
       this.updateSettings('disabled', false);
       this.destroyTippy();
@@ -106,7 +96,7 @@ class Tooltip extends React.Component {
       return;
     }
 
-    // open
+    // open tooltip
     if (this.props.open === true && !prevProps.open) {
       this.updateSettings('open', true);
       setTimeout(() => {
@@ -127,10 +117,12 @@ class Tooltip extends React.Component {
       this.updateTippy();
     }
 
-    // update otherProps
-    const propChanges = detectPropsChanged(this.props, prevProps);
-    propChanges.forEach(key => {
-      this.updateSettings(key, this.props[key]);
+    // update tippy settings
+    propKeys.forEach(key => {
+      const propValue = this.props[key];
+      if (propValue !== prevProps[key]) {
+        this.updateSettings(key, propValue);
+      }
     });
   }
 

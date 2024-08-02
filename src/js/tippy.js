@@ -158,7 +158,8 @@ class Tippy {
       return;
     }
 
-    if (data.settings.reactDOM) {
+    // TODO: event
+	if (data.settings.reactDOM) {
       this.updateForReact(popper, data.settings.reactDOM)
     }
     // end: Custom react
@@ -401,7 +402,7 @@ class Tippy {
     // Remove from store
     Store.splice(findIndex(Store, data => data.popper === popper), 1)
 
-    // Ensure filter is called only once
+    // Ensure filter is called only once ???
     if (_isLast === undefined || _isLast) {
       this.store = Store.filter(data => data.tippyInstance === this)
     }

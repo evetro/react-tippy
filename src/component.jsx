@@ -1,9 +1,12 @@
-import React from 'react';
+import React from 'react'; // TODO put this as a dep dependency in this package, correct version will be installed in react-demo
 
-import tippy from './js/tippy';
-import { Browser } from './js/core/globals';
+import tippy from './js/tippy'; // TODO wrapper for this mutable object
+import { Browser } from './js/core/globals'; // TODO wrapper for this mutable object
 
+// TODO exported from tippy-package
 const stopPortalEvent = e => e.stopPropagation();
+
+// import Tippy, { dd } from '../tippy' // relative import for now 
 
 const defaultProps = {
   html: null,
@@ -181,6 +184,7 @@ class Tooltip extends React.Component {
   }
 
   _initTippy() {
+      // TODO wrap this in an exported function in the new base package which may serve Vue and Svelte
       if (typeof window === 'undefined' || typeof document === 'undefined' || !Browser.SUPPORTED) {
       return;
     }
@@ -189,48 +193,52 @@ class Tooltip extends React.Component {
         this.tooltipDOM.setAttribute('title', this.props.title);
       }
 
+      // TODO new API for exported tooltip object
       this.tippy = tippy(this.tooltipDOM, {
-        disabled: this.props.disabled,
-        position: this.props.position,
         animation: this.props.animation,
         animateFill: this.props.animateFill,
+        appendTo: this.props.appendTo,
         arrow: this.props.arrow,
         arrowSize: this.props.arrowSize,
         delay: this.props.delay,
-        hideDelay: this.props.hideDelay,
-        trigger: this.props.trigger,
+        disabled: this.props.disabled,
+        distance: this.props.distance,
         duration: this.props.duration,
+        followCursor: this.props.followCursor,
+        hideDelay: this.props.hideDelay,
         hideDuration: this.props.hideDuration,
-        interactive: this.props.interactive,
-        interactiveBorder: this.props.interactiveBorder,
-        theme: this.props.theme,
-        offset: this.props.offset,
         hideOnClick: this.props.hideOnClick,
         hideOnScroll: this.props.hideOnScroll,
-        multiple: this.props.multiple,
-        size: this.props.size,
-        followCursor: this.props.followCursor,
         inertia: this.props.inertia,
-        popperOptions: this.props.popperOptions,
-        onShow: this.props.onShow,
-        onShown: this.props.onShown,
+        interactive: this.props.interactive,
+        interactiveBorder: this.props.interactiveBorder,
+        multiple: this.props.multiple,
+        offset: this.props.offset,
         onHide: this.props.onHide,
         onHidden: this.props.onHidden,
-        distance: this.props.distance,
-        appendTo: this.props.appendTo,
-        reactDOM: this.props.html,
-        setReactDOMValue: newReactDOM => this.setState({ reactDOMValue: newReactDOM }),
-        unmountHTMLWhenHide: this.props.unmountHTMLWhenHide,
+        onRequestClose: this.props.onRequestClose,
+        onShow: this.props.onShow,
+        onShown: this.props.onShown,
         open: this.props.open,
+        popperOptions: this.props.popperOptions,
+        position: this.props.position,
+        size: this.props.size,
         sticky: this.props.sticky,
         stickyDuration: this.props.stickyDuration,
         tag: this.props.tag,
+        theme: this.props.theme,
         touchHold: this.props.touchHold,
-        onRequestClose: this.props.onRequestClose,
+        trigger: this.props.trigger,
+        unmountHTMLWhenHide: this.props.unmountHTMLWhenHide,
+        zIndex: this.props.zIndex,
+        // not part of prop parameters - is this a constant?
         performance: true,
-        html: undefined,
-        zIndex: this.props.zIndex
-      });
+        // TODO leaking abstraction
+        html: undefined, // ???
+        setReactDOMValue: newReactDOM => this.setState({ reactDOMValue: newReactDOM }),
+        reactDOM: this.props.html,
+      })
+
       if (this.props.open) {
         this.showTooltip();
       }

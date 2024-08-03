@@ -1,12 +1,8 @@
 import React from 'react'; // TODO put this as a dep dependency in this package, correct version will be installed in react-demo
+import ReactDOM from 'react-dom';
 
-import tippy from './js/tippy'; // TODO wrapper for this mutable object
-import { Browser } from './js/core/globals'; // TODO wrapper for this mutable object
-
-// TODO exported from tippy-package
-const stopPortalEvent = e => e.stopPropagation();
-
-// import Tippy, { dd } from '../tippy' // relative import for now 
+import tippy from './js/tippy'; // TODO replace with class:  import Tippy from './js/tippy'
+import { Browser, Selectors } from './js/core/globals'; // TODO wrapper for mutable Browser object
 
 const defaultProps = {
   html: null,
@@ -61,10 +57,6 @@ class Tooltip extends React.Component {
     this.showTooltip = this._showTooltip.bind(this);
     this.hideTooltip = this._hideTooltip.bind(this);
     this.updateSettings = this._updateSettings.bind(this);
-
-    this.state = {
-      reactDOMValue: null,
-    }
   }
 
   componentDidMount() {
@@ -168,7 +160,10 @@ class Tooltip extends React.Component {
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
       const isVisible = popper.style.visibility === 'visible' || this.props.open;
       if (isVisible) {
-        this.tippy.updateForReact(popper, this.props.html);
+        ReactDOM.render(
+          this.props.html,
+          popper.querySelector(Selectors.CONTENT)
+        );
       }
     }
   }
@@ -234,9 +229,8 @@ class Tooltip extends React.Component {
         // not part of prop parameters - is this a constant?
         performance: true,
         // TODO leaking abstraction
-        html: undefined, // ???
-        setReactDOMValue: newReactDOM => this.setState({ reactDOMValue: newReactDOM }),
-        reactDOM: this.props.html,
+        html: undefined,
+        reactDOM: this.props.html, // TODO why leak this into the core library?
       })
 
       if (this.props.open) {
@@ -261,67 +255,21 @@ class Tooltip extends React.Component {
   }
 
   render() {
-    let {
-      tag: Tag,
-    } = this.props;
-
+    const Tag = this.props.tag;
     return (
-      <React.Fragment>
-        <Tag
-          ref={(tooltip) =>
-            { this.tooltipDOM = tooltip; }}
-            title={this.props.title}
-            className={this.props.className}
-            tabIndex={this.props.tabIndex}
-            style={{
-              display: 'inline',
-                ...this.props.style
-            }}
-          >
-            {this.props.children}
-
-        </Tag>
-        {this.state.reactDOMValue && (
-          <div
-            onClick={stopPortalEvent}
-            onContextMenu={stopPortalEvent}
-            onDoubleClick={stopPortalEvent}
-            onDrag={stopPortalEvent}
-            onDragEnd={stopPortalEvent}
-            onDragEnter={stopPortalEvent}
-            onDragExit={stopPortalEvent}
-            onDragLeave={stopPortalEvent}
-            onDragOver={stopPortalEvent}
-            onDragStart={stopPortalEvent}
-            onDrop={stopPortalEvent}
-            onMouseDown={stopPortalEvent}
-            onMouseEnter={stopPortalEvent}
-            onMouseLeave={stopPortalEvent}
-            onMouseMove={stopPortalEvent}
-            onMouseOver={stopPortalEvent}
-            onMouseOut={stopPortalEvent}
-            onMouseUp={stopPortalEvent}
-
-            onKeyDown={stopPortalEvent}
-            onKeyPress={stopPortalEvent}
-            onKeyUp={stopPortalEvent}
-
-            onFocus={stopPortalEvent}
-            onBlur={stopPortalEvent}
-
-            onChange={stopPortalEvent}
-            onInput={stopPortalEvent}
-            onInvalid={stopPortalEvent}
-            onSubmit={stopPortalEvent}
-          >
-            {this.state.reactDOMValue}
-          </div>
-        )}
-      </React.Fragment>
+      <Tag
+        ref={(tooltip) =>
+          { this.tooltipDOM = tooltip; }}
+          title={this.props.title}
+          className={this.props.className}
+          tabIndex={this.props.tabIndex}
+          style={{ display: 'inline', ...this.props.style }}
+        >
+          {this.props.children}
+      </Tag>
     );
   }
 }
-
 
 Tooltip.defaultProps = defaultProps;
 

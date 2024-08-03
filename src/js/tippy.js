@@ -115,25 +115,6 @@ class Tippy {
   };
 
   /**
-  * Update for React
-  * @param {DOMElement} - popper
-  * @param {ReactElement} - content
-  */
-  updateForReact(popper, updatedContent) {
-    const tooltipContent = popper.querySelector(Selectors.CONTENT)
-    const data = find(this.store, data => data.popper === popper)
-    if (!data) return;
-
-    const {
-      setReactDOMValue,
-    } = data.settings;
-
-    ReactDOM.render(
-      updatedContent,
-      tooltipContent,
-    );
-  }
-  /**
   * Shows a popper
   * @param {Element} popper
   * @param {Number} customDuration (optional)
@@ -153,21 +134,22 @@ class Tippy {
 
     this.callbacks.show.call(popper)
 
-    // Custom react
     if (data.settings && data.settings.open === false) {
       return;
     }
 
-    // TODO: event
-	if (data.settings.reactDOM) {
-      this.updateForReact(popper, data.settings.reactDOM)
+    // begin custom react logic
+    if (data.settings.reactDOM) {
+      ReactDOM.render(
+        data.settings.reactDOM,
+        popper.querySelector(Selectors.CONTENT)
+      );
     }
-    // end: Custom react
+    // end custom react logic
 
     const {
       el,
       settings: {
-        appendTo,
         sticky,
         interactive,
         followCursor,
@@ -199,7 +181,7 @@ class Tippy {
     el.setAttribute('aria-describedby', popper.id)
 
     // Wait for popper's position to update
-    defer(() => {
+    const fn = () => {
       // Sometimes the arrow will not be in the correct position, force another update
       if (!followCursor || Browser.touch) {
         data.popperInstance.update()
@@ -228,7 +210,7 @@ class Tippy {
       })
 
       // Wait for transitions to complete
-      onTransitionEnd(data, _duration, () => {
+      const cb = () => {
         if (!isVisible(popper) || data._onShownFired) return
 
         // Focus interactive tooltips only
@@ -241,8 +223,10 @@ class Tippy {
         if (typeof this.callbacks.shown === 'function') {
           this.callbacks.shown.call(popper)
         }
-      })
-    })
+      }
+      onTransitionEnd(data, _duration, cb)
+    }
+    defer(fn)
   }
 
   /**
@@ -260,22 +244,16 @@ class Tippy {
 
     const { tooltip, circle, content } = getInnerElements(popper)
 
-    // custom react
-    // Prevent hide if open // TODO check if compatible with ES2015
+    // Prevent hide if open
     if (data?.settings?.disabled === false && data?.settings?.open) {
       return;
     }
-
-    const isUnmount = data && data.settings && data.settings.unmountHTMLWhenHide && data.settings.reactDOM;
-    // end: custom react
 
     const {
       el,
       settings: {
         appendTo,
-        sticky,
         interactive,
-        followCursor,
         html,
         trigger,
         duration
@@ -303,7 +281,7 @@ class Tippy {
       list.add('leave')
     })
 
-    // Re-focus click-triggered html elements
+    // Re-focus click-triggered HTML elements
     // and the tooltipped element IS in the viewport (otherwise it causes unsightly scrolling
     // if the tooltip is closed and the element isn't in the viewport anymore)
     if (html && trigger.indexOf('click') !== -1 && elementIsInViewport(el)) {
@@ -311,7 +289,7 @@ class Tippy {
     }
 
     // Wait for transitions to complete
-    onTransitionEnd(data, _duration, () => {
+    const fn = () => {
       // `isVisible` is not completely reliable to determine if we shouldn't
       // run the hidden callback, we need to check the computed opacity style.
       // This prevents glitchy behavior of the transition when quickly showing
@@ -328,11 +306,13 @@ class Tippy {
 
       this.callbacks.hidden.call(popper)
 
-      // custom react
-      if (isUnmount) {
+      // begin custom react logic
+      if (data && data.settings && data.settings.unmountHTMLWhenHide && data.settings.reactDOM) {
         ReactDOM.unmountComponentAtNode(content);
       }
-    })
+      // end custom react logic
+    }
+    onTransitionEnd(data, _duration, fn)
   }
 
   /**
@@ -402,7 +382,7 @@ class Tippy {
     // Remove from store
     Store.splice(findIndex(Store, data => data.popper === popper), 1)
 
-    // Ensure filter is called only once ???
+    // Ensures that the filter method is called only once
     if (_isLast === undefined || _isLast) {
       this.store = Store.filter(data => data.tippyInstance === this)
     }

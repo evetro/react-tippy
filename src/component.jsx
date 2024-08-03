@@ -226,10 +226,7 @@ class Tooltip extends React.Component {
         trigger: this.props.trigger,
         unmountHTMLWhenHide: this.props.unmountHTMLWhenHide,
         zIndex: this.props.zIndex,
-        // not part of prop parameters - is this a constant?
-        performance: true,
-        // TODO leaking abstraction
-        html: undefined,
+        html: undefined, // TODO leaking abstraction/antipattern
         reactDOM: this.props.html, // TODO why leak this into the core library?
       })
 

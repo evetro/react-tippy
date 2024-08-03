@@ -60,7 +60,6 @@ export const Defaults = {
   appendTo: () => document.body,
   zIndex: 9999,
   touchHold: false,
-  performance: false,
   dynamicTitle: false,
   popperOptions: {},
   open: undefined,

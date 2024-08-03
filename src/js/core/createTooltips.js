@@ -1,4 +1,3 @@
-import getIndividualSettings from './getIndividualSettings'
 import createPopperElement  from './createPopperElement'
 import createTrigger from './createTrigger'
 import getEventListenerHandlers from './getEventListenerHandlers'
@@ -6,24 +5,16 @@ import evaluateSettings from './evaluateSettings'
 
 import removeTitle from '../utils/removeTitle'
 
-// import { Store } from './globals'
-
-let idCounter = 1
-
 /**
 * Creates tooltips for all el elements that match the instance's selector
 * @param {Element[]} els
 * @return {Object[]} Array of ref data objects
 */
 export default function createTooltips(els) {
-  return els.reduce((a, el) => {
-    const id = idCounter
+  return els.reduce((a, el, index) => {
+    const id = index + 1
 
-    const settings = evaluateSettings(
-      this.settings.performance
-        ? this.settings
-        : getIndividualSettings(el, this.settings)
-    )
+    const settings = evaluateSettings(this.settings)
 
     const { reactDOM, trigger, touchHold } = settings
 
@@ -50,8 +41,6 @@ export default function createTooltips(els) {
       listeners,
       tippyInstance: this
     })
-
-    idCounter++
 
     return a
   }, [])

@@ -2,7 +2,6 @@
   "name": "react-tippy",
   "version": "2.0.0",
   "description": "Tooltip component for React based on Popper v1",
-  "todo-workspaces": ["react", "react-demo", "tippy"],
   "type": "module",
   "main": "dist/react-tippy.js",
   "files": [

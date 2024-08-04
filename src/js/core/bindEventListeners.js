@@ -1,9 +1,9 @@
-import { Browser, Selectors, Store } from './globals'
+import { Browser, Selectors, Store, setBrowserTouch } from './globals'
 
 import hideAllPoppers from './hideAllPoppers'
 
 import closest from '../utils/closest'
-import find    from '../utils/find'
+import find from '../utils/find'
 import { matches } from '../utils/matches'
 
 /**
@@ -11,7 +11,7 @@ import { matches } from '../utils/matches'
 */
 export default function bindEventListeners() {
   const touchHandler = () => {
-    Browser.touch = true
+    setBrowserTouch(true)
 
     if (Browser.iOS()) {
       document.body.classList.add('tippy-touch')
@@ -28,9 +28,9 @@ export default function bindEventListeners() {
     return () => {
       const now = performance.now()
 
-      // Chrome 60+ is 1 mousemove per rAF, use 20ms time difference
+      // Chrome 60+ is 1 mousemove per rAF, therfore use 20ms time difference
       if (now - time < 20) {
-        Browser.touch = false
+        setBrowserTouch(false)
         document.removeEventListener('mousemove', mousemoveHandler)
         if (!Browser.iOS()) {
           document.body.classList.remove('tippy-touch')

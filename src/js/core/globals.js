@@ -1,13 +1,19 @@
-export const Browser = {}
-
-if (typeof window !== 'undefined') {
-  Browser.SUPPORTED = 'requestAnimationFrame' in window
-  Browser.SUPPORTS_TOUCH = 'ontouchstart' in window
-  Browser.touch = false
-  Browser.dynamicInputDetection = true
-  // Chrome device/touch emulation can make this dynamic
-  Browser.iOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream
+export const Browser = {
+  iOS,
+  touch: false,
 }
+
+export function setBrowserTouch(touch) {
+  Object.assign(Browser, { touch })
+}
+
+try {
+  Object.assign(Browser, {
+    dynamicInputDetection: true,
+    SUPPORTED: ('requestAnimationFrame' in window),
+    SUPPORTS_TOUCH: ('ontouchstart' in window)
+  })
+} catch {}
 
 /**
 * The global storage array which holds all data reference objects
@@ -71,3 +77,10 @@ export const Defaults = {
 * Used in `getIndividualSettings()`
 */
 export const DefaultsKeys = Browser.SUPPORTED && Object.keys(Defaults)
+
+function iOS() {
+  try {
+    // Chrome device/touch emulation can make this dynamic
+    return (/iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream)
+  } catch { return false }
+}

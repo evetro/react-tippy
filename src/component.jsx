@@ -1,8 +1,8 @@
-import React from 'react'; // TODO put this as a dep dependency in this package, correct version will be installed in react-demo
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import tippy from './js/tippy'; // TODO replace with class:  import Tippy from './js/tippy'
-import { Browser, Selectors } from './js/core/globals'; // TODO wrapper for mutable Browser object
+import { Browser, Selectors } from './js/core/globals';
 
 const defaultProps = {
   html: null,
@@ -47,6 +47,10 @@ const defaultProps = {
 
 const propKeys = Object.keys(defaultProps);
 
+const noBrowser = () => (
+  typeof window === 'undefined' || typeof document === 'undefined'
+)
+
 class Tooltip extends React.Component {
   constructor(props) {
     super(props);
@@ -60,21 +64,21 @@ class Tooltip extends React.Component {
   }
 
   componentDidMount() {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
     this.initTippy();
   }
 
   componentWillUnmount() {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
     this.destroyTippy();
   }
 
   componentDidUpdate(prevProps) {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
 
@@ -122,7 +126,7 @@ class Tooltip extends React.Component {
   }
 
   _showTooltip() {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
     if (this.tippy) {
@@ -132,7 +136,7 @@ class Tooltip extends React.Component {
   }
 
   _hideTooltip() {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
     if (this.tippy) {
@@ -142,7 +146,7 @@ class Tooltip extends React.Component {
   }
 
   _updateSettings(name, value) {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
     if (this.tippy) {
@@ -152,7 +156,7 @@ class Tooltip extends React.Component {
   }
 
   _updateReactDom() {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
     if (this.tippy) {
@@ -169,7 +173,7 @@ class Tooltip extends React.Component {
   }
 
   _updateTippy() {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
     if (this.tippy) {
@@ -179,8 +183,7 @@ class Tooltip extends React.Component {
   }
 
   _initTippy() {
-      // TODO wrap this in an exported function in the new base package which may serve Vue and Svelte
-      if (typeof window === 'undefined' || typeof document === 'undefined' || !Browser.SUPPORTED) {
+      if (noBrowser() || !Browser.SUPPORTED) {
       return;
     }
     if (!this.props.disabled) {
@@ -239,7 +242,7 @@ class Tooltip extends React.Component {
   }
 
   _destroyTippy() {
-    if (typeof window === 'undefined' || typeof document === 'undefined' ) {
+    if (noBrowser()) {
       return;
     }
     if (this.tippy) {

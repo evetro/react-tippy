@@ -1,9 +1,8 @@
-import { Store, Selectors } from './globals'
+import { Store } from './globals'
 
 import getCorePlacement from '../utils/getCorePlacement'
-import find             from '../utils/find'
-import prefix           from '../utils/prefix'
-import closest          from '../utils/closest'
+import find from '../utils/find'
+import prefix from '../utils/prefix'
 
 /**
 * Mousemove event listener callback method for follow cursor setting

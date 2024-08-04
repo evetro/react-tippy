@@ -409,9 +409,4 @@ function tippy(selector, settings) {
   return new Tippy(selector, settings)
 }
 
-tippy.Browser = Browser
-tippy.Defaults = Defaults
-tippy.disableDynamicInputDetection = () => Browser.dynamicInputDetection = false
-tippy.enableDynamicInputDetection = () => Browser.dynamicInputDetection = true
-
 export default tippy

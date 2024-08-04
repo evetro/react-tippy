@@ -53,7 +53,8 @@ export interface TooltipProps {
 	onShow?: () => void
 	onShown?: () => void
 	open?: boolean
-	popperOptions?: any // TODO define structure PopperOptions for v2
+	// TODO we will define a structure PopperOptions when popper v1 gets replaced with v2
+	popperOptions?: any
 	position?: Position
 	size?: Size
 	sticky?: boolean

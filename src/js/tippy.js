@@ -34,7 +34,7 @@ import evaluateSettings from './core/evaluateSettings'
 * @param {String|Element|Element[]} selector
 * @param {Object} settings (optional) - the object of settings to be applied to the instance
 */
-class Tippy {
+export default class Tippy {
   constructor(selector, settings = {}) {
     // Use default browser tooltip on unsupported browsers
     if (!Browser.SUPPORTED) return
@@ -404,9 +404,3 @@ class Tippy {
     this.state.destroyed = true
   }
 }
-
-function tippy(selector, settings) {
-  return new Tippy(selector, settings)
-}
-
-export default tippy

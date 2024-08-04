@@ -7,13 +7,13 @@ export function setBrowserTouch(touch) {
   Object.assign(Browser, { touch })
 }
 
-try {
+if (typeof window !== 'undefined') {
   Object.assign(Browser, {
     dynamicInputDetection: true,
     SUPPORTED: ('requestAnimationFrame' in window),
     SUPPORTS_TOUCH: ('ontouchstart' in window)
   })
-} catch {}
+}
 
 /**
 * The global storage array which holds all data reference objects

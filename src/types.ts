@@ -25,11 +25,9 @@ export type Theme = "dark" | "light" | "transparent"
 export interface TooltipProps {
 	animateFill?: boolean
 	animation?: Animation
+	appendTo?: HTMLElement | (() => HTMLElement)
 	arrow?: boolean
 	arrowSize?: Size
-	appendTo?: HTMLElement | (() => HTMLElement)
-	beforeHidden?: () => void
-	beforeShown?: () => void
 	children?: React.ReactNode
 	className?: string
 	delay?: number | [number, number]
@@ -53,7 +51,7 @@ export interface TooltipProps {
 	onShow?: () => void
 	onShown?: () => void
 	open?: boolean
-	// TODO we will define a structure PopperOptions when popper v1 gets replaced with v2
+	// TODO define the structure PopperOptions when popper v1 gets replaced with v2
 	popperOptions?: any
 	position?: Position
 	size?: Size
@@ -65,8 +63,8 @@ export interface TooltipProps {
 	theme?: Theme
 	title?: string
 	touchHold?: boolean
-	transitionFlip?: boolean
 	trigger?: Trigger
 	unmountHTMLWhenHide?: boolean
 	zIndex?: number
 }
+

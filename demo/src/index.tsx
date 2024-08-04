@@ -92,7 +92,6 @@ export default function App() {
 				interactive
 				position="right"
 				animateFill={false}
-				transitionFlip={false}
 				html={(
 					<div style={{ width: 400 }}>
 						<p>{tooltipContent}</p>

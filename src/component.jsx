@@ -1,46 +1,50 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import tippy from './js/tippy'; // TODO replace with class:  import Tippy from './js/tippy'
+import Tippy from './js/tippy';
 import { Browser, Selectors } from './js/core/globals';
 
 const defaultProps = {
-  html: null,
-  position: 'top',
-  animation: 'shift',
   animateFill: true,
+  animation: 'shift',
+  appendTo: () => document.body,
   arrow: false,
+  arrowSize: 'regular',
+  children: undefined,
+  className: '',
   delay: 0,
-  hideDelay: 0,
-  trigger: 'mouseenter focus',
+  disabled: false,
+  distance: 10,
   duration: 375,
+  followCursor: false,
+  hideDelay: 0,
   hideDuration: 375,
-  interactive: false,
-  interactiveBorder: 2,
-  theme: 'dark',
-  offset: 0,
   hideOnClick: true,
   hideOnScroll: false,
-  multiple: false,
-  followCursor: false,
+  html: null,
   inertia: false,
-  popperOptions: {},
+  interactive: false,
+  interactiveBorder: 2,
+  multiple: false,
+  offset: 0,
+  onHidden: () => {},
+  onHide: () => {},
+  onRequestClose: () => {},
   onShow: () => {},
   onShown: () => {},
-  onHide: () => {},
-  onHidden: () => {},
-  disabled: false,
-  arrowSize: 'regular',
+  open: false,
+  popperOptions: {},
+  position: 'top',
   size: 'regular',
-  className: '',
-  style: {},
-  distance: 10,
-  onRequestClose: () => {},
-  appendTo: () => document.body,
   sticky: false,
   stickyDuration: 200,
+  style: {},
+  tabIndex: undefined,
   tag: 'div',
+  theme: 'dark',
+  title: undefined,
   touchHold: false,
+  trigger: 'mouseenter focus',
   unmountHTMLWhenHide: false,
   zIndex: 9999
 };
@@ -191,8 +195,7 @@ class Tooltip extends React.Component {
         this.tooltipDOM.setAttribute('title', this.props.title);
       }
 
-      // TODO new API for exported tooltip object
-      this.tippy = tippy(this.tooltipDOM, {
+      this.tippy = new Tippy(this.tooltipDOM, {
         animation: this.props.animation,
         animateFill: this.props.animateFill,
         appendTo: this.props.appendTo,

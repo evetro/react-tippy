@@ -334,9 +334,8 @@ export default class Tippy {
   /**
   * Destroys a popper
   * @param {Element} popper
-  * @param {Boolean} _isLast - private param used by destroyAll to optimize
   */
-  destroy(popper, _isLast) {
+  destroy(popper) {
     if (this.state.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
@@ -371,12 +370,7 @@ export default class Tippy {
     _mutationObserver && _mutationObserver.disconnect()
 
     // Remove from store
-    Store.splice(findIndex(Store, data => data.popper === popper), 1)
-
-    // Ensures that the filter method is called only once
-    if (_isLast === undefined || _isLast) {
-      this.store = Store.filter(data => data.tippyInstance === this)
-    }
+    Store.splice(findIndex(Store, d => d.popper === popper), 1)
   }
 
   /**
@@ -387,8 +381,12 @@ export default class Tippy {
 
     const storeLength = this.store.length
 
-    this.store.forEach(({popper}, index) => {
-      this.destroy(popper, index === storeLength - 1)
+    this.store.forEach(({ popper }, index) => {
+      this.destroy(popper)
+      // Ensures that the filter method is called only once
+      if (index === storeLength - 1) {
+        this.store = Store.filter(data => data.tippyInstance === this)
+      }
     })
 
     this.store = null

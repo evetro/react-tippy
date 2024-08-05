@@ -1,9 +1,6 @@
-import ReactDOM from 'react-dom'
-
 import {
   Browser,
   Store,
-  Selectors,
   Defaults
 } from './core/globals'
 import init from './core/init'
@@ -138,18 +135,10 @@ export default class Tippy {
       return;
     }
 
-    // begin custom react logic
-    if (data.settings.reactDOM) {
-      ReactDOM.render(
-        data.settings.reactDOM,
-        popper.querySelector(Selectors.CONTENT)
-      );
-    }
-    // end custom react logic
-
     const {
       el,
       settings: {
+        renderVirtualDom,
         sticky,
         interactive,
         followCursor,
@@ -158,6 +147,8 @@ export default class Tippy {
         dynamicTitle
       }
     } = data
+
+    renderVirtualDom?.(popper)
 
     if (dynamicTitle) {
       const title = el.getAttribute('title')
@@ -256,6 +247,8 @@ export default class Tippy {
         interactive,
         html,
         trigger,
+        unmountFromVirtualDom,
+        unmountHTMLWhenHide,
         duration
       }
     } = data
@@ -306,11 +299,9 @@ export default class Tippy {
 
       this.callbacks.hidden.call(popper)
 
-      // begin custom react logic
-      if (data && data.settings && data.settings.unmountHTMLWhenHide && data.settings.reactDOM) {
-        ReactDOM.unmountComponentAtNode(content);
+      if (unmountHTMLWhenHide) {
+        unmountFromVirtualDom?.(content)
       }
-      // end custom react logic
     }
     onTransitionEnd(data, _duration, fn)
   }

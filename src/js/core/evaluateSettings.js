@@ -12,7 +12,7 @@ export default function evaluateSettings(settings) {
   // reassign appendTo onto the result of evaluating appendTo
   // if it's set as a function instead of Element
   if (settings.appendTo && typeof settings.appendTo === 'function') {
-    settings.appendTo = settings.appendTo()
+    Object.assign(settings, { appendTo: settings.appendTo() })
   }
 
   return settings

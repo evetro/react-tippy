@@ -65,6 +65,8 @@ class Tooltip extends React.Component {
     this.showTooltip = this._showTooltip.bind(this);
     this.hideTooltip = this._hideTooltip.bind(this);
     this.updateSettings = this._updateSettings.bind(this);
+    this.renderReactDom = this._renderReactDom.bind(this);
+    this.unmountReactDom = this._unmountReactDom.bind(this);
   }
 
   componentDidMount() {
@@ -176,6 +178,21 @@ class Tooltip extends React.Component {
     }
   }
 
+  _renderReactDom(popper) {
+    if (this.props.html) {
+      ReactDOM.render(
+        this.props.html,
+        popper.querySelector(Selectors.CONTENT)
+      );
+    }
+  }
+
+  _unmountReactDom(content) {
+    if (this.props.html) {
+      ReactDOM.unmountComponentAtNode(content)
+    }
+  }
+
   _updateTippy() {
     if (noBrowser()) {
       return;
@@ -232,8 +249,10 @@ class Tooltip extends React.Component {
         trigger: this.props.trigger,
         unmountHTMLWhenHide: this.props.unmountHTMLWhenHide,
         zIndex: this.props.zIndex,
-        html: undefined, // TODO leaking abstraction/antipattern
-        reactDOM: this.props.html, // TODO why leak this into the core library?
+        html: undefined,
+        useVirtualDom: Boolean(this.props.html),
+        renderVirtualDom: this.renderReactDom,
+        unmountFromVirtualDom: this.unmountReactDom
       })
 
       if (this.props.open) {

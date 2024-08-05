@@ -7,19 +7,18 @@ import removeTitle from '../utils/removeTitle'
 
 /**
 * Creates tooltips for all el elements that match the instance's selector
-* @param {Element[]} els
+* @param {Element[]} els Resolved array of Element instances
 * @return {Object[]} Array of ref data objects
 */
 export default function createTooltips(els) {
-  return els.reduce((a, el, index) => {
+  const settings = evaluateSettings(this.settings)
+  const { trigger, touchHold, useVirtualDom } = settings
+
+  const cb = (store, el, index) => {
     const id = index + 1
 
-    const settings = evaluateSettings(this.settings)
-
-    const { reactDOM, trigger, touchHold } = settings
-
     const title = el.getAttribute('title')
-    if (!title && !reactDOM) return a
+    if (!title && !useVirtualDom) return store
 
     el.setAttribute('data-tooltipped', '')
     removeTitle(el)
@@ -27,13 +26,12 @@ export default function createTooltips(els) {
     const popper = createPopperElement(id, title, settings)
     const handlers = getEventListenerHandlers.call(this, el, popper, settings)
 
-    let listeners = []
-
-    trigger.trim().split(' ').forEach(event =>
-      listeners = listeners.concat(createTrigger(event, el, handlers, touchHold))
+    const fn = (list, event) => (
+      list.concat(createTrigger(event, el, handlers, touchHold))
     )
+    const listeners = trigger.trim().split(' ').reduce(fn, [])
 
-    a.push({
+    store.push({
       id,
       el,
       popper,
@@ -42,6 +40,8 @@ export default function createTooltips(els) {
       tippyInstance: this
     })
 
-    return a
-  }, [])
+    return store
+  }
+
+  return els.reduce(cb, [])
 }

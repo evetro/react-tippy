@@ -40,7 +40,7 @@ export const Selectors = {
 * The default settings applied to each instance
 */
 export const Defaults = {
-  html: false,
+  html: undefined,
   position: 'top',
   animation: 'shift',
   animateFill: true,

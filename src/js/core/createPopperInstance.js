@@ -6,6 +6,8 @@ import getCorePlacement from '../utils/getCorePlacement'
 import getInnerElements from '../utils/getInnerElements'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 
+const isObject = obj => (obj != null && (typeof obj === 'object') && !Array.isArray(obj))
+
 /**
 * Creates a new popper instance
 * @param {Object} data
@@ -28,40 +30,38 @@ export default function createPopperInstance(data) {
 
   const config = {
     placement: position,
-    ...(popperOptions || {}),
+    ...(isObject(popperOptions) ? popperOptions : {}),
     modifiers: {
-      ...(popperOptions ? popperOptions.modifiers : {}),
+      ...(isObject(popperOptions?.modifiers) ? popperOptions.modifiers : {}),
       flip: {
         padding: distance + 5 /* 5px from viewport boundary */,
-        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.flip : {})
+        ...(isObject(popperOptions?.modifiers?.flip) ? popperOptions.modifiers.flip : {})
       },
       offset: {
         offset,
-        ...(popperOptions && popperOptions.modifiers ? popperOptions.modifiers.offset : {})
+        ...(isObject(popperOptions?.modifiers?.offset) ? popperOptions.modifiers.offset : {})
       }
     },
     onUpdate() {
-      const styles = tooltip.style
-      styles.top = ''
-      styles.bottom = ''
-      styles.left = ''
-      styles.right = ''
-      styles[
-        getCorePlacement(popper.getAttribute('x-placement'))
-      ] = getOffsetDistanceInPx(distance)
+      const placementKey = getCorePlacement(popper.getAttribute('x-placement'))
+      Object.assign(tooltip.style, {
+        bottom: '',
+        left: '',
+        right: '',
+        top: '',
+        [placementKey]: getOffsetDistanceInPx(distance)
+      })
     }
   }
 
   // Update the popper's position whenever its content changes
   // Not supported in IE10 unless polyfilled
   if (window.MutationObserver) {
-    const styles = popper.style
-
     const observer = new MutationObserver(() => {
-      styles[prefix('transitionDuration')] = '0ms'
+      popper.style[prefix('transitionDuration')] = '0ms'
       data.popperInstance.update()
       defer(() => {
-        styles[prefix('transitionDuration')] = flipDuration + 'ms'
+        popper.style[prefix('transitionDuration')] = `${flipDuration}ms`
       })
     })
 

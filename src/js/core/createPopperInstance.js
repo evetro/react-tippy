@@ -1,4 +1,4 @@
-import Popper from 'popper.js'
+import { createPopperLite } from '@popperjs/core'
 
 import defer from '../utils/defer'
 import prefix from '../utils/prefix'
@@ -74,5 +74,5 @@ export default function createPopperInstance(data) {
     data._mutationObserver = observer
   }
 
-  return new Popper(el, popper, config)
+  return createPopperLite(el, popper, config)
 }

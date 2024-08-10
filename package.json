@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/evetro/react-tippy",
   "dependencies": {
-    "popper.js": "^1.11.1"
+    "@popperjs/core": "^2.11.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",

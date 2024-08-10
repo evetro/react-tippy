@@ -43,7 +43,7 @@ export default function createPopperElement(id, title, settings) {
     // Add an arrow
     const arrow = document.createElement('div')
     arrow.setAttribute('class', `arrow-${arrowSize}`)
-    arrow.setAttribute('x-arrow', '')
+    arrow.setAttribute('data-popper-arrow', '')
     tooltip.appendChild(arrow)
   }
 
@@ -52,7 +52,7 @@ export default function createPopperElement(id, title, settings) {
     tooltip.setAttribute('data-animatefill', '')
     const circle = document.createElement('div')
     circle.setAttribute('class', 'leave')
-    circle.setAttribute('x-circle', '')
+    circle.setAttribute('data-popper-circle', '')
     tooltip.appendChild(circle)
   }
 

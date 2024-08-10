@@ -8,13 +8,13 @@ import getCorePlacement from '../utils/getCorePlacement'
 * @return {Boolean}
 */
 export default function cursorIsOutsideInteractiveBorder(event, popper, settings) {
-  if (!popper.getAttribute('x-placement')) return true
+  if (!popper.getAttribute('data-popper-placement')) return true
 
   const { clientX: x, clientY: y } = event
   const { interactiveBorder, distance } = settings
 
   const rect = popper.getBoundingClientRect()
-  const corePosition = getCorePlacement(popper.getAttribute('x-placement'))
+  const corePosition = getCorePlacement(popper.getAttribute('data-popper-placement'))
   const borderWithDistance = interactiveBorder + distance
 
   const exceeds = {

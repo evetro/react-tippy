@@ -30,8 +30,8 @@ export const Selectors = {
   POPPER: '.tippy-popper',
   TOOLTIP: '.tippy-tooltip',
   CONTENT: '.tippy-tooltip-content',
-  CIRCLE: '[x-circle]',
-  ARROW: '[x-arrow]',
+  CIRCLE: '[data-popper-circle]',
+  ARROW: '[data-popper-arrow]',
   TOOLTIPPED_EL: '[data-tooltipped]',
   CONTROLLER: '[data-tippy-controller]'
 }

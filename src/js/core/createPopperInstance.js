@@ -43,7 +43,7 @@ export default function createPopperInstance(data) {
       }
     },
     onUpdate() {
-      const placementKey = getCorePlacement(popper.getAttribute('x-placement'))
+      const placementKey = getCorePlacement(popper.getAttribute('data-popper-placement'))
       Object.assign(tooltip.style, {
         bottom: '',
         left: '',

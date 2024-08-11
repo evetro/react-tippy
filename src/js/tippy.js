@@ -175,7 +175,7 @@ export default class Tippy {
     const fn = () => {
       // Sometimes the arrow will not be in the correct position, force another update
       if (!followCursor || Browser.touch) {
-        data.popperInstance.update()
+        data.popperInstance.update() /** @warning returns Promise<void> */
         applyTransitionDuration([popper], flipDuration)
       }
 

@@ -1,9 +1,7 @@
-import { Selectors, Browser } from './globals'
+import { Browser } from './globals'
 
 import followCursorHandler  from './followCursorHandler'
 import createPopperInstance from './createPopperInstance'
-
-import prefix from '../utils/prefix'
 
 /**
 * Appends the popper and creates a popper instance if one does not exist
@@ -28,7 +26,7 @@ export default function mountPopper(data) {
   if (!data.popperInstance) {
     data.popperInstance = createPopperInstance(data)
   } else {
-    data.popperInstance.update()
+    data.popperInstance.update() /** @warning returns Promise<void> */
     if (!followCursor || Browser.touch) {
       data.popperInstance.enableEventListeners()
     }

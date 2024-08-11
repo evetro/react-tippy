@@ -28,13 +28,28 @@ export default function createPopperInstance(data) {
 
   const { tooltip } = getInnerElements(popper)
 
+  const arrowMod = {
+    name: 'arrow',
+    options: {
+      padding: ({ placement }) => {
+        if (placement?.includes?.('top') || placement?.includes?.('bottom')) {
+          return { left: 9, right: 9 }
+        }
+        if (placement?.includes?.('left') || placement?.includes?.('right')) {
+          return { top: 6, bottom: 6 }
+        }
+        return 0
+      },
+    }
+  }
+  
   const config = {
     placement: position,
     ...(isObject(popperOptions) ? popperOptions : {}),
     modifiers: {
       ...(isObject(popperOptions?.modifiers) ? popperOptions.modifiers : {}),
       flip: {
-        padding: distance + 5 /* 5px from viewport boundary */,
+        padding: distance + 10 /* 5px from viewport boundary */,
         ...(isObject(popperOptions?.modifiers?.flip) ? popperOptions.modifiers.flip : {})
       },
       offset: {
@@ -42,6 +57,7 @@ export default function createPopperInstance(data) {
         ...(isObject(popperOptions?.modifiers?.offset) ? popperOptions.modifiers.offset : {})
       }
     },
+    // TODO replace probably with onFirstUpdate (probably also provides the correct placement as a function argument)
     onUpdate() {
       const placementKey = getCorePlacement(popper.getAttribute('data-popper-placement'))
       Object.assign(tooltip.style, {
@@ -59,7 +75,7 @@ export default function createPopperInstance(data) {
   if (window.MutationObserver) {
     const observer = new MutationObserver(() => {
       popper.style[prefix('transitionDuration')] = '0ms'
-      data.popperInstance.update()
+      data.popperInstance.update() /** @warning returns Promise<void> */
       defer(() => {
         popper.style[prefix('transitionDuration')] = `${flipDuration}ms`
       })

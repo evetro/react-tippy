@@ -88,7 +88,7 @@ export default function createPopperElement(id, title, settings) {
     content.innerHTML = title
   }
 
-  // Init distance. Further updates are made in the popper instance's `onUpdate()` method
+  // Init distance. Further updates are made in the popper instance's modifiers
   tooltip.style[getCorePlacement(position)] = getOffsetDistanceInPx(distance)
 
   tooltip.appendChild(content)

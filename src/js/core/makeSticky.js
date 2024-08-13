@@ -22,7 +22,7 @@ export default function makeSticky(refData) {
     popper.style[prefix('transitionDuration')] = ''
 
   const updatePosition = () => {
-    popperInstance && popperInstance.scheduleUpdate()
+    popperInstance?.update?.()
 
     applyTransitionDuration()
 

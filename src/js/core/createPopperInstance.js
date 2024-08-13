@@ -75,7 +75,7 @@ export default function createPopperInstance(data) {
   if (window.MutationObserver) {
     const observer = new MutationObserver(() => {
       popper.style[prefix('transitionDuration')] = '0ms'
-      data.popperInstance.update() /** @warning returns Promise<void> */
+      data.popperInstance?.forceUpdate?.()
       defer(() => {
         popper.style[prefix('transitionDuration')] = `${flipDuration}ms`
       })

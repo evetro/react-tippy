@@ -26,6 +26,7 @@ import onTransitionEnd from './core/onTransitionEnd'
 import makeSticky from './core/makeSticky'
 import createTooltips from './core/createTooltips'
 import evaluateSettings from './core/evaluateSettings'
+import toggleEventListeners from './toggleEventListeners.ts'
 
 /**
 * @param {String|Element|Element[]} selector
@@ -177,16 +178,15 @@ export default class Tippy {
       if (!data.popperInstance) {
         data.popperInstance = createPopperInstance(data)
       } else {
-        data.popperInstance?.forceUpdate?.()
-        if (!followCursor || Browser.touch) {
-          data.popperInstance.enableEventListeners() // TODO move into createPopperInstance, use eventListeners modifier instead
-        }
+        data.popperInstance.forceUpdate()
       }
   
       // Since touch is determined dynamically, followCursor is set on mount
       if (followCursor && !Browser.touch) {
         el.addEventListener('mousemove', followCursorHandler)
-        data.popperInstance.disableEventListeners() // TODO move into createPopperInstance, use eventListeners modifier instead
+        toggleEventListeners(data.popperInstance)
+      } else {
+        toggleEventListeners(data.popperInstance, true)
       }
     }
 
@@ -317,7 +317,7 @@ export default class Tippy {
       ) return
 
       el.removeEventListener('mousemove', followCursorHandler)
-      data.popperInstance.disableEventListeners() // TODO move into createPopperInstance, use eventListeners modifier instead
+      toggleEventListeners(data.popperInstance)
       appendTo.removeChild(popper)
 
       this.callbacks.hidden.call(popper)

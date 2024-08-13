@@ -1,3 +1,4 @@
+import { Options as PopperOptions } from '@popperjs/core'
 import React from 'react'
 
 export type Position =
@@ -51,8 +52,7 @@ export interface TooltipProps {
 	onShow?: () => void
 	onShown?: () => void
 	open?: boolean
-	// TODO define the structure PopperOptions when popper v1 gets replaced with v2
-	popperOptions?: any
+	popperOptions?: PopperOptions
 	position?: Position
 	size?: Size
 	sticky?: boolean

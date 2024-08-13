@@ -28,7 +28,7 @@ export default function createPopperInstance(data) {
 
   const { tooltip } = getInnerElements(popper)
 
-  const arrowMod = {
+  const arrowMod = { // replaces margins in CSS stylesheet
     name: 'arrow',
     options: {
       padding: ({ placement }) => {
@@ -57,7 +57,7 @@ export default function createPopperInstance(data) {
         ...(isObject(popperOptions?.modifiers?.offset) ? popperOptions.modifiers.offset : {})
       }
     },
-    // TODO replace probably with onFirstUpdate (probably also provides the correct placement as a function argument)
+    // TODO onUpdate is gone in v2; use a custom modifier where the property `phase` is set to 'afterWrite'
     onUpdate() {
       const placementKey = getCorePlacement(popper.getAttribute('data-popper-placement'))
       Object.assign(tooltip.style, {

@@ -19,10 +19,10 @@ import isVisible from './utils/isVisible'
 import noop from './utils/noop'
 
 /* Core library functions */
+import createPopperInstance from './core/createPopperInstance'
 import followCursorHandler from './core/followCursorHandler'
 import getArrayOfElements from './core/getArrayOfElements'
 import onTransitionEnd from './core/onTransitionEnd'
-import mountPopper from './core/mountPopper'
 import makeSticky from './core/makeSticky'
 import createTooltips from './core/createTooltips'
 import evaluateSettings from './core/evaluateSettings'
@@ -137,7 +137,9 @@ export default class Tippy {
 
     const {
       el,
+      popper,
       settings: {
+        appendTo,
         renderVirtualDom,
         sticky,
         interactive,
@@ -164,8 +166,29 @@ export default class Tippy {
 
     // Prevent a transition when popper changes position
     applyTransitionDuration([popper, tooltip, circle], 0)
-
-    mountPopper(data)
+  
+    if (!appendTo.contains(popper)) {
+      /**
+      * Appends the popper and creates a popper instance if one does not exist
+      * Also updates its position if need be and enables event listeners
+      */
+      appendTo.appendChild(popper)
+  
+      if (!data.popperInstance) {
+        data.popperInstance = createPopperInstance(data)
+      } else {
+        data.popperInstance?.forceUpdate?.()
+        if (!followCursor || Browser.touch) {
+          data.popperInstance.enableEventListeners() // TODO move into createPopperInstance, use eventListeners modifier instead
+        }
+      }
+  
+      // Since touch is determined dynamically, followCursor is set on mount
+      if (followCursor && !Browser.touch) {
+        el.addEventListener('mousemove', followCursorHandler)
+        data.popperInstance.disableEventListeners() // TODO move into createPopperInstance, use eventListeners modifier instead
+      }
+    }
 
     popper.style.visibility = 'visible'
     popper.setAttribute('aria-hidden', 'false')
@@ -175,7 +198,7 @@ export default class Tippy {
     const fn = () => {
       // Sometimes the arrow will not be in the correct position, force another update
       if (!followCursor || Browser.touch) {
-        data.popperInstance.update() /** @warning returns Promise<void> */
+        data.popperInstance?.forceUpdate?.()
         applyTransitionDuration([popper], flipDuration)
       }
 
@@ -294,7 +317,7 @@ export default class Tippy {
       ) return
 
       el.removeEventListener('mousemove', followCursorHandler)
-      data.popperInstance.disableEventListeners()
+      data.popperInstance.disableEventListeners() // TODO move into createPopperInstance, use eventListeners modifier instead
       appendTo.removeChild(popper)
 
       this.callbacks.hidden.call(popper)

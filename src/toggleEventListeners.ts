@@ -9,7 +9,7 @@ export default function toggleEventListeners(
 			({ name }) => (name === 'eventListeners')
 		)
 		if (eventHandlers.length === 0) {
-			options.modifiers.push({ name: 'eventListeners', enabled: false })
+			options.modifiers.push({ name: 'eventListeners', enabled })
 		} else {
 			eventHandlers.forEach((modifier) => {
 				Object.assign(modifier, { enabled })

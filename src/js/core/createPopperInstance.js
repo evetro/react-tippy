@@ -1,10 +1,11 @@
-import { createPopperLite } from '@popperjs/core'
+import { createPopperLite } from '@popperjs/core' // , Modifier, ArrowModifier for TS
 
 import defer from '../utils/defer'
 import prefix from '../utils/prefix'
 import getCorePlacement from '../utils/getCorePlacement'
 import getInnerElements from '../utils/getInnerElements'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
+import {  } from '../../selectors'
 
 const isObject = obj => (obj != null && (typeof obj === 'object') && !Array.isArray(obj))
 
@@ -26,10 +27,10 @@ export default function createPopperInstance(data) {
     }
   } = data
 
-  const { tooltip } = getInnerElements(popper)
-
   const arrowMod = { // replaces margins in CSS stylesheet
     name: 'arrow',
+    enabled: true,
+    phase: 'main',
     options: {
       padding: ({ placement }) => {
         if (placement?.includes?.('top') || placement?.includes?.('bottom')) {
@@ -42,9 +43,28 @@ export default function createPopperInstance(data) {
       },
     }
   }
+
+  const customModOnUpdate = {
+    name: 'updateTooltipStyle',
+    enabled: true,
+    phase: 'afterWrite',
+    fn({ state }) {
+      const { attributes, styles } = state
+      const placementKey = getCorePlacement(attributes['data-popper-placement'])
+      Object.assign(styles['tippy-tooltip'], {
+        bottom: '',
+        left: '',
+        right: '',
+        top: '',
+        [placementKey]: getOffsetDistanceInPx(distance)
+      })
+      return state
+    }
+  }
   
   const config = {
     placement: position,
+    // TODO convert options below to new API format, maybe expose modifiers as its own option endpoint...
     ...(isObject(popperOptions) ? popperOptions : {}),
     modifiers: {
       ...(isObject(popperOptions?.modifiers) ? popperOptions.modifiers : {}),
@@ -57,9 +77,11 @@ export default function createPopperInstance(data) {
         ...(isObject(popperOptions?.modifiers?.offset) ? popperOptions.modifiers.offset : {})
       }
     },
+    // "onUpdate is gone; use a custom modifier with an afterWrite phase"
     // TODO onUpdate is gone in v2; use a custom modifier where the property `phase` is set to 'afterWrite'
     onUpdate() {
       const placementKey = getCorePlacement(popper.getAttribute('data-popper-placement'))
+      const { tooltip } = getInnerElements(popper)
       Object.assign(tooltip.style, {
         bottom: '',
         left: '',

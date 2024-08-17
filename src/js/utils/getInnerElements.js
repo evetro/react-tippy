@@ -1,4 +1,4 @@
-import { Selectors } from '../core/globals'
+import { CONTENT, TOOLTIP, CIRCLE } from '../../selectors.ts'
 
 /**
 * Returns inner elements of the popper element
@@ -7,8 +7,8 @@ import { Selectors } from '../core/globals'
 */
 export default function getInnerElements(popper) {
   return {
-    tooltip: popper.querySelector(Selectors.TOOLTIP),
-    circle: popper.querySelector(Selectors.CIRCLE),
-    content: popper.querySelector(Selectors.CONTENT)
+    tooltip: popper.querySelector(TOOLTIP),
+    circle: popper.querySelector(CIRCLE),
+    content: popper.querySelector(CONTENT)
   }
 }

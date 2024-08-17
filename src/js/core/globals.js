@@ -16,25 +16,18 @@ if (typeof window !== 'undefined') {
 }
 
 /**
+* The keys of the defaults object for reducing down into a new object
+* Used in `getIndividualSettings()`
+*/
+export const DefaultsKeys = Browser.SUPPORTED ? Object.keys(Defaults) : []
+
+/**
 * The global storage array which holds all data reference objects
 * from every instance
 * This allows us to hide tooltips from all instances, finding the ref when
 * clicking on the body, and for followCursor
 */
 export const Store = []
-
-/**
-* Selector constants used for grabbing elements
-*/
-export const Selectors = {
-  POPPER: '.tippy-popper',
-  TOOLTIP: '.tippy-tooltip',
-  CONTENT: '.tippy-tooltip-content',
-  CIRCLE: '[data-popper-circle]',
-  ARROW: '[data-popper-arrow]',
-  TOOLTIPPED_EL: '[data-tooltipped]',
-  CONTROLLER: '[data-tippy-controller]'
-}
 
 /**
 * The default settings applied to each instance
@@ -71,12 +64,6 @@ export const Defaults = {
   open: undefined,
   onRequestClose: () => {},
 }
-
-/**
-* The keys of the defaults object for reducing down into a new object
-* Used in `getIndividualSettings()`
-*/
-export const DefaultsKeys = Browser.SUPPORTED && Object.keys(Defaults)
 
 function iOS() {
   try {

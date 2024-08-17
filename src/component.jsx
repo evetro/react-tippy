@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Tippy from './js/tippy';
-import { Browser, Selectors } from './js/core/globals';
+import { Browser } from './js/core/globals';
+import { CONTENT } from './selectors.ts'
 
 const defaultProps = {
   animateFill: true,
@@ -172,7 +173,7 @@ class Tooltip extends React.Component {
       if (isVisible) {
         ReactDOM.render(
           this.props.html,
-          popper.querySelector(Selectors.CONTENT)
+          popper.querySelector(CONTENT)
         );
       }
     }
@@ -182,7 +183,7 @@ class Tooltip extends React.Component {
     if (this.props.html) {
       ReactDOM.render(
         this.props.html,
-        popper.querySelector(Selectors.CONTENT)
+        popper.querySelector(CONTENT)
       );
     }
   }

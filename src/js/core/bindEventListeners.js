@@ -1,10 +1,11 @@
-import { Browser, Selectors, Store, setBrowserTouch } from './globals'
+import { Browser, Store, setBrowserTouch } from './globals'
 
 import hideAllPoppers from './hideAllPoppers'
 
 import closest from '../utils/closest'
 import find from '../utils/find'
 import { matches } from '../utils/matches'
+import { CONTROLLER, POPPER, TOOLTIPPED_EL } from '../../selectors.ts'
 
 /**
 * Adds the needed event listeners
@@ -47,8 +48,8 @@ export default function bindEventListeners() {
       return hideAllPoppers()
     }
 
-    const el = closest(event.target, Selectors.TOOLTIPPED_EL)
-    const popper = closest(event.target, Selectors.POPPER)
+    const el = closest(event.target, TOOLTIPPED_EL)
+    const popper = closest(event.target, POPPER)
 
     if (popper) {
       const ref = find(Store, ref => ref.popper === popper)
@@ -82,14 +83,14 @@ export default function bindEventListeners() {
     }
 
     // Don't trigger a hide for tippy controllers, and don't needlessly run loop
-    if (closest(event.target, Selectors.CONTROLLER) || !document.querySelector(Selectors.POPPER)) return
+    if (closest(event.target, CONTROLLER) || !document.querySelector(POPPER)) return
 
     hideAllPoppers()
   }
 
   const blurHandler = event => {
     const { activeElement: el } = document
-    if (el && el.blur && matches.call(el, Selectors.TOOLTIPPED_EL)) {
+    if (el && el.blur && matches.call(el, TOOLTIPPED_EL)) {
       el.blur()
     }
   }

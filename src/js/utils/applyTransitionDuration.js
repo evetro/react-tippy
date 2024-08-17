@@ -1,6 +1,6 @@
-import { Selectors } from '../core/globals'
 import prefix from './prefix'
 import { matches } from './matches'
+import { CONTENT } from '../../selectors.ts'
 
 /**
 * Applies the transition duration to each element
@@ -11,7 +11,7 @@ export default function applyTransitionDuration(els, duration) {
   els.forEach(el => {
     if (!el) return
 
-    const isContent = matches.call(el, Selectors.CONTENT)
+    const isContent = matches.call(el, CONTENT)
 
     const _duration = isContent
       ? Math.round(duration/1.3)

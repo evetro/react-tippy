@@ -1,8 +1,9 @@
-import { Browser, Selectors } from './globals'
+import { Browser } from './globals'
 
 import isVisible from '../utils/isVisible'
 import closest from '../utils/closest'
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
+import { POPPER, TOOLTIPPED_EL } from '../../selectors.ts'
 
 /**
 * Returns relevant listener callbacks for each ref
@@ -99,9 +100,9 @@ export default function getEventListenerHandlers(el, popper, settings) {
           hide()
         }
 
-        const closestTooltippedEl = closest(event.target, Selectors.TOOLTIPPED_EL)
+        const closestTooltippedEl = closest(event.target, TOOLTIPPED_EL)
 
-        const isOverPopper = closest(event.target, Selectors.POPPER) === popper
+        const isOverPopper = closest(event.target, POPPER) === popper
         const isOverEl = closestTooltippedEl === el
         const isClickTriggered = trigger.indexOf('click') !== -1
         const isOverOtherTooltippedEl = closestTooltippedEl && closestTooltippedEl !== el
@@ -135,7 +136,7 @@ export default function getEventListenerHandlers(el, popper, settings) {
     // Ignore blur on touch devices, if there is no `relatedTarget`, hide
     // If the related target is a popper, ignore
     if (!event.relatedTarget || Browser.touch) return
-    if (closest(event.relatedTarget, Selectors.POPPER)) return
+    if (closest(event.relatedTarget, POPPER)) return
 
     hide()
   }

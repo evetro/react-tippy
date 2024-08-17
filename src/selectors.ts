@@ -1,0 +1,7 @@
+export const POPPER = '.tippy-popper'
+export const TOOLTIP = '.tippy-tooltip'
+export const CONTENT = '.tippy-tooltip-content'
+export const CIRCLE = '[data-popper-circle]'
+export const ARROW = '[data-popper-arrow]'
+export const TOOLTIPPED_EL = '[data-tooltipped]'
+export const CONTROLLER = '[data-tippy-controller]'

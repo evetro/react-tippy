@@ -16,7 +16,6 @@ import modifyClassList from './utils/modifyClassList'
 import getInnerElements from './utils/getInnerElements'
 import applyTransitionDuration from './utils/applyTransitionDuration'
 import isVisible from './utils/isVisible'
-import noop from './utils/noop'
 
 /* Core library functions */
 import createPopperInstance from './core/createPopperInstance'
@@ -49,10 +48,10 @@ export default class Tippy {
 
     this.callbacks = {
       wait: settings.wait,
-      show: settings.onShow || noop,
-      shown: settings.onShown || noop,
-      hide: settings.onHide || noop,
-      hidden: settings.onHidden || noop
+      show: settings.onShow,
+      shown: settings.onShown,
+      hide: settings.onHide,
+      hidden: settings.onHidden
     }
 
     this.store = createTooltips.call(this, getArrayOfElements(selector))
@@ -130,7 +129,7 @@ export default class Tippy {
       return
     }
 
-    this.callbacks.show.call(popper)
+    this.callbacks.show?.call?.(popper)
 
     if (data.settings && data.settings.open === false) {
       return;
@@ -234,9 +233,7 @@ export default class Tippy {
         // Prevents shown() from firing more than once from early transition cancellations
         data._onShownFired = true
 
-        if (typeof this.callbacks.shown === 'function') {
-          this.callbacks.shown.call(popper)
-        }
+        this.callbacks.shown?.call?.(popper)
       }
       onTransitionEnd(data, _duration, cb)
     }
@@ -251,7 +248,7 @@ export default class Tippy {
   hide(popper, customDuration) {
     if (this.state.destroyed) return
 
-    this.callbacks.hide.call(popper)
+    this.callbacks.hide?.call?.(popper)
 
     const data = find(this.store, data => data.popper === popper)
     if (!data) return;
@@ -320,7 +317,7 @@ export default class Tippy {
       toggleEventListeners(data.popperInstance)
       appendTo.removeChild(popper)
 
-      this.callbacks.hidden.call(popper)
+      this.callbacks.hidden?.call?.(popper)
 
       if (unmountHTMLWhenHide) {
         unmountFromVirtualDom?.(content)

@@ -47,7 +47,7 @@ export const Defaults = {
   theme: 'dark',
   size: 'regular',
   distance: 10,
-  offset: 0,
+  offset: [0, 0],
   hideOnClick: true,
   hideOnScroll: false,
   multiple: false,
@@ -60,7 +60,7 @@ export const Defaults = {
   zIndex: 9999,
   touchHold: false,
   dynamicTitle: false,
-  popperOptions: {},
+  flipModifierOptions: undefined,
   open: undefined,
   onRequestClose: () => {},
 }

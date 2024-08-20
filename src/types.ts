@@ -1,4 +1,4 @@
-import { Options as PopperOptions } from '@popperjs/core'
+import { Options as FlipModifierOptions } from '@popperjs/core/lib/modifiers/flip'
 import React from 'react'
 
 export type Position =
@@ -45,14 +45,14 @@ export interface TooltipProps {
 	interactive?: boolean
 	interactiveBorder?: number
 	multiple?: boolean
-	offset?: number
+	offset?: [number, number]
 	onHidden?: () => void
 	onHide?: () => void
 	onRequestClose?: () => void
 	onShow?: () => void
 	onShown?: () => void
 	open?: boolean
-	popperOptions?: PopperOptions
+	flipModifierOptions?: FlipModifierOptions
 	position?: Position
 	size?: Size
 	sticky?: boolean

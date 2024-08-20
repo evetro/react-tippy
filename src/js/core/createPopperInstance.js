@@ -1,13 +1,9 @@
-import { createPopperLite } from '@popperjs/core' // , Modifier, ArrowModifier for TS
+import { createPopperLite } from '@popperjs/core'
 
 import defer from '../utils/defer'
 import prefix from '../utils/prefix'
 import getCorePlacement from '../utils/getCorePlacement'
-import getInnerElements from '../utils/getInnerElements'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
-import {  } from '../../selectors'
-
-const isObject = obj => (obj != null && (typeof obj === 'object') && !Array.isArray(obj))
 
 /**
 * Creates a new popper instance
@@ -20,14 +16,21 @@ export default function createPopperInstance(data) {
     popper,
     settings: {
       position,
-      popperOptions,
       offset,
       distance,
+      flipModifierOptions,
       flipDuration
     }
   } = data
 
-  const arrowMod = { // replaces margins in CSS stylesheet
+  const options = {}
+  Object.assign(
+    options,
+    (flipModifierOptions ?? {}),
+    { padding: distance + 10 /* 10px from viewport boundary */ }
+  )
+
+  const modifiers = [{
     name: 'arrow',
     enabled: true,
     phase: 'main',
@@ -42,9 +45,19 @@ export default function createPopperInstance(data) {
         return 0
       },
     }
-  }
-
-  const customModOnUpdate = {
+  }, {
+    name: 'flip',
+    options
+  }, {
+    name: 'offset',
+    options: { offset }
+  }, {
+    name: 'computeStyles',
+    options: {
+      adaptive: false,
+      gpuAcceleration: false,
+    }
+  }, {
     name: 'updateTooltipStyle',
     enabled: true,
     phase: 'afterWrite',
@@ -60,41 +73,11 @@ export default function createPopperInstance(data) {
       })
       return state
     }
-  }
-  
-  const config = {
-    placement: position,
-    // TODO convert options below to new API format, maybe expose modifiers as its own option endpoint...
-    ...(isObject(popperOptions) ? popperOptions : {}),
-    modifiers: {
-      ...(isObject(popperOptions?.modifiers) ? popperOptions.modifiers : {}),
-      flip: {
-        padding: distance + 10 /* 5px from viewport boundary */,
-        ...(isObject(popperOptions?.modifiers?.flip) ? popperOptions.modifiers.flip : {})
-      },
-      offset: {
-        offset,
-        ...(isObject(popperOptions?.modifiers?.offset) ? popperOptions.modifiers.offset : {})
-      }
-    },
-    // "onUpdate is gone; use a custom modifier with an afterWrite phase"
-    // TODO onUpdate is gone in v2; use a custom modifier where the property `phase` is set to 'afterWrite'
-    onUpdate() {
-      const placementKey = getCorePlacement(popper.getAttribute('data-popper-placement'))
-      const { tooltip } = getInnerElements(popper)
-      Object.assign(tooltip.style, {
-        bottom: '',
-        left: '',
-        right: '',
-        top: '',
-        [placementKey]: getOffsetDistanceInPx(distance)
-      })
-    }
-  }
+  }]
 
   // Update the popper's position whenever its content changes
   // Not supported in IE10 unless polyfilled
-  if (window.MutationObserver) {
+  if (window?.MutationObserver) {
     const observer = new MutationObserver(() => {
       popper.style[prefix('transitionDuration')] = '0ms'
       data.popperInstance?.forceUpdate?.()
@@ -112,5 +95,5 @@ export default function createPopperInstance(data) {
     data._mutationObserver = observer
   }
 
-  return createPopperLite(el, popper, config)
+  return createPopperLite(el, popper, { placement: position, modifiers })
 }

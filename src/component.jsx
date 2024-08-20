@@ -169,8 +169,7 @@ class Tooltip extends React.Component {
     if (this.tippy) {
       this.updateSettings('reactDOM', this.props.html);
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
-      const isVisible = popper.style.visibility === 'visible' || this.props.open;
-      if (isVisible) {
+      if (popper.style.visibility === 'visible' || this.props.open) {
         ReactDOM.render(
           this.props.html,
           popper.querySelector(CONTENT)

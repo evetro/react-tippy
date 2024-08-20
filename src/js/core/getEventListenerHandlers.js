@@ -34,7 +34,7 @@ export default function getEventListenerHandlers(el, popper, settings) {
     clearTimeout(hideDelay)
   }
 
-  const _show = () => {
+  const show = () => {
     clearTimeouts()
 
     // Not hidden. For clicking when it also has a `focus` event listener
@@ -49,9 +49,6 @@ export default function getEventListenerHandlers(el, popper, settings) {
     }
   }
 
-  const show = event =>
-  this.callbacks.wait ? this.callbacks.wait.call(popper, _show, event) : _show()
-
   const hide = () => {
     clearTimeouts()
 
@@ -65,15 +62,24 @@ export default function getEventListenerHandlers(el, popper, settings) {
   }
 
   const handleTrigger = event => {
-    const mouseenterTouch = event.type === 'mouseenter' && Browser.SUPPORTS_TOUCH && Browser.touch
+    const mouseenterTouch = (
+      event.type === 'mouseenter' && Browser.SUPPORTS_TOUCH && Browser.touch
+    )
 
     if (mouseenterTouch && touchHold) return
 
     // Toggle show/hide when clicking click-triggered tooltips
-    const isClick = event.type === 'click'
-    const isNotPersistent = hideOnClick !== 'persistent'
-
-    isClick && isVisible(popper) && isNotPersistent ? hide() : show(event)
+    if (
+      event.type === 'click'
+      && isVisible(popper)
+      && hideOnClick !== 'persistent'
+    ) {
+      hide()
+    } else if (typeof this.callbacks.wait === 'function') {
+      this.callbacks.wait.call(popper, show, event)
+    } else {
+      show()
+    }
 
     if (mouseenterTouch && Browser.iOS() && el.click) {
       el.click()

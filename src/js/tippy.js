@@ -137,7 +137,6 @@ export default class Tippy {
 
     const {
       el,
-      popper,
       settings: {
         appendTo,
         renderVirtualDom,

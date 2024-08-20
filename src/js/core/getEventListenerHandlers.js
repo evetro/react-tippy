@@ -14,17 +14,12 @@ import { POPPER, TOOLTIPPED_EL } from '../../selectors.ts'
 */
 export default function getEventListenerHandlers(el, popper, settings) {
   const {
-    position,
     delay,
-    duration,
     interactive,
-    interactiveBorder,
-    distance,
     hideOnClick,
     hideOnScroll,
     trigger,
-    touchHold,
-    touchWait
+    touchHold
   } = settings
 
   let showDelay, hideDelay
@@ -87,10 +82,12 @@ export default function getEventListenerHandlers(el, popper, settings) {
   }
 
   const handleMouseleave = event => {
-
     // Don't fire 'mouseleave', use the 'touchend'
-    if (event.type === 'mouseleave' && Browser.SUPPORTS_TOUCH &&
-    Browser.touch && touchHold) {
+    if (
+      event.type === 'mouseleave'
+      && Browser.SUPPORTS_TOUCH
+      && Browser.touch && touchHold
+    ) {
       return
     }
 

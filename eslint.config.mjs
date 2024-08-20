@@ -7,7 +7,12 @@ import tsLintPlugin from '@typescript-eslint/eslint-plugin'
 import tsLintParser from '@typescript-eslint/parser'
 
 // util function which denotes file descriptors by directory name
-const paths = dir => [`./${dir}/**.*.ts`, `./${dir}/**.*.tsx`]
+const paths = dir => ([
+  `./${dir}/**.*.ts`,
+  `./${dir}/**.*.tsx`,
+  `./${dir}/**.*.js`,
+  `./${dir}/**.*.jsx`
+])
 
 const { browser, es2015, node, serviceWorker } = glob
 
@@ -44,7 +49,7 @@ export default [
       'no-use-before-define': [0],
       'no-console': 2,
       'import/newline-after-import': [2, { count: 1 }]
-    }
+    },
     plugins,
     jsxPragma: null,
     languageOptions: {

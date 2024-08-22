@@ -24,33 +24,32 @@ export default function getEventListenerHandlers(el, popper, settings) {
 
   let showDelay, hideDelay
 
-  const clearTimeouts = () => {
+  const showFn = () => {
     clearTimeout(showDelay)
     clearTimeout(hideDelay)
-  }
-
-  const show = () => {
-    clearTimeouts()
 
     // Not hidden. For clicking when it also has a `focus` event listener
     if (isVisible(popper)) return
 
-    const _delay = Array.isArray(delay) ? delay[0] : delay
-
     if (delay) {
-      showDelay = setTimeout(() => this.show(popper), _delay)
+      showDelay = setTimeout(
+        () => this.show(popper),
+        Array.isArray(delay) ? delay[0] : delay
+      )
     } else {
       this.show(popper)
     }
   }
 
-  const hide = () => {
-    clearTimeouts()
-
-    const _delay = Array.isArray(delay) ? delay[1] : delay
+  const hideFn = () => {
+    clearTimeout(showDelay)
+    clearTimeout(hideDelay)
 
     if (delay) {
-      hideDelay = setTimeout(() => this.hide(popper), _delay)
+      hideDelay = setTimeout(
+        () => this.hide(popper),
+        Array.isArray(delay) ? delay[1] : delay
+      )
     } else {
       this.hide(popper)
     }
@@ -69,11 +68,11 @@ export default function getEventListenerHandlers(el, popper, settings) {
       && isVisible(popper)
       && hideOnClick !== 'persistent'
     ) {
-      hide()
+      hideFn()
     } else if (typeof this.callbacks.wait === 'function') {
-      this.callbacks.wait.call(popper, show, event)
+      this.callbacks.wait.call(popper, showFn, event)
     } else {
-      show()
+      showFn()
     }
 
     if (mouseenterTouch && Browser.iOS() && el.click) {
@@ -97,10 +96,10 @@ export default function getEventListenerHandlers(el, popper, settings) {
       const handleMousemove = event => {
 
         const triggerHide = () => {
-          document.body.removeEventListener('mouseleave', hide)
+          document.body.removeEventListener('mouseleave', hideFn)
           document.removeEventListener('mousemove', handleMousemove)
-          document.removeEventListener('scroll', hide)
-          hide()
+          document.removeEventListener('scroll', hideFn)
+          hideFn()
         }
 
         const closestTooltippedEl = closest(event.target, TOOLTIPPED_EL)
@@ -122,17 +121,17 @@ export default function getEventListenerHandlers(el, popper, settings) {
       }
 
       if (hideOnScroll) {
-        document.addEventListener('scroll', hide)
+        document.addEventListener('scroll', hideFn)
       }
 
-      document.body.addEventListener('mouseleave', hide)
+      document.body.addEventListener('mouseleave', hideFn)
       document.addEventListener('mousemove', handleMousemove)
 
       return
     }
 
     // If it's not interactive, just hide it
-    hide()
+    hideFn()
   }
 
   const handleBlur = event => {
@@ -141,7 +140,7 @@ export default function getEventListenerHandlers(el, popper, settings) {
     if (!event.relatedTarget || Browser.touch) return
     if (closest(event.relatedTarget, POPPER)) return
 
-    hide()
+    hideFn()
   }
 
   return {

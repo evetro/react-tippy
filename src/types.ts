@@ -15,7 +15,7 @@ export type Position =
 	| "right-start"
 	| "right-end"
 
-export type Trigger = "mouseenter" | "focus" | "click" | "manual"
+export type Trigger = "mouseenter" | "focus" | "click" | "manual" | "mouseenter focus"
 
 export type Animation = "shift" | "perspective" | "fade" | "scale" | "none"
 
@@ -40,7 +40,7 @@ export interface TooltipProps {
 	hideDuration?: number
 	hideOnClick?: boolean | "persistent"
 	hideOnScroll?: boolean
-	html?: React.ReactElement<any>
+	html?: React.ReactNode
 	inertia?: boolean
 	interactive?: boolean
 	interactiveBorder?: number
@@ -67,4 +67,3 @@ export interface TooltipProps {
 	unmountHTMLWhenHide?: boolean
 	zIndex?: number
 }
-

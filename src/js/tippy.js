@@ -33,29 +33,30 @@ import toggleEventListeners from './toggleEventListeners.ts'
 */
 export default class Tippy {
   constructor(selector, settings = {}) {
-    // Use default browser tooltip on unsupported browsers
-    if (!Browser.SUPPORTED) return
-
-    init()
-
-    this.state = {
-      destroyed: false
+    /** @todo write tests with vitest and jsdom (for faking DOM) */
+    /** @todo factory function in TS at the top level for defining parameter types */
+    this.callbacks = {}
+    this.settings = {}
+    if (Browser.SUPPORTED) {
+      init()
+      this.destroyed = false
+      this.selector = selector
+      const { wait, onShow, onShown, onHide, onHidden } = settings
+      Object.assign(this.callbacks, {
+        wait,
+        show: onShow,
+        shown: onShown,
+        hide: onHide,
+        hidden: onHidden
+      })
+      Object.assign(this.settings, Defaults, settings)
+      this.store = createTooltips.call(this, getArrayOfElements(selector))
+      Store.push.apply(Store, this.store)
+    } else {
+      // Use default browser tooltip on unsupported browsers
+      this.destroyed = true
+      this.store = []
     }
-
-    this.selector = selector
-
-    this.settings = { ...Defaults, ...settings }
-
-    this.callbacks = {
-      wait: settings.wait,
-      show: settings.onShow,
-      shown: settings.onShown,
-      hide: settings.onHide,
-      hidden: settings.onHidden
-    }
-
-    this.store = createTooltips.call(this, getArrayOfElements(selector))
-    Store.push.apply(Store, this.store)
   }
 
   /**
@@ -86,11 +87,11 @@ export default class Tippy {
 
   /**
   * Returns the reference data object from either the reference element or popper element
-  * @param {Element} x (reference element or popper)
+  * @param {Element} ref (reference element or popper)
   * @return {Object}
   */
-  getReferenceData(x) {
-    return find(this.store, data => data.el === x || data.popper === x)
+  getReferenceData(ref) {
+    return find(this.store, data => data.el === ref || data.popper === ref)
   }
 
   /**
@@ -117,7 +118,7 @@ export default class Tippy {
   * @param {Number} customDuration (optional)
   */
   show(popper, customDuration) {
-    if (this.state.destroyed) return
+    if (this.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
     if (!data) return;
@@ -245,7 +246,7 @@ export default class Tippy {
   * @param {Number} customDuration (optional)
   */
   hide(popper, customDuration) {
-    if (this.state.destroyed) return
+    if (this.destroyed) return
 
     this.callbacks.hide?.call?.(popper)
 
@@ -330,7 +331,7 @@ export default class Tippy {
   * @param {Element} popper
   */
   update(popper) {
-    if (this.state.destroyed) return
+    if (this.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
     if (!data) return;
@@ -340,14 +341,12 @@ export default class Tippy {
 
     if (html instanceof Element) {
       console.warn('Aborted: update() should not be used if `html` is a DOM element')
-      return
+    } else if (html) {
+      content.innerHTML = document.getElementById(html.replace('#', '')).innerHTML
+    } else {
+      content.innerHTML = el.getAttribute('title') || el.getAttribute('data-original-title')
+      removeTitle(el)
     }
-
-    content.innerHTML = html
-      ? document.getElementById(html.replace('#', '')).innerHTML
-      : el.getAttribute('title') || el.getAttribute('data-original-title')
-
-    if (!html) removeTitle(el)
   }
 
   /**
@@ -355,7 +354,7 @@ export default class Tippy {
   * @param {Element} popper
   */
   destroy(popper) {
-    if (this.state.destroyed) return
+    if (this.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
     if (!data) return;
@@ -396,7 +395,7 @@ export default class Tippy {
   * Destroys all tooltips created by the instance
   */
   destroyAll() {
-    if (this.state.destroyed) return
+    if (this.destroyed) return
 
     const storeLength = this.store.length
 
@@ -409,6 +408,6 @@ export default class Tippy {
     })
 
     this.store = null
-    this.state.destroyed = true
+    this.destroyed = true
   }
 }

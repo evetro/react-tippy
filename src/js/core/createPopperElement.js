@@ -36,15 +36,15 @@ export default function createPopperElement(id, title, settings) {
   tooltip.setAttribute('data-animation', animation)
 
   theme.split(' ').forEach(t => {
-    tooltip.classList.add(t +'-theme')
+    tooltip.classList.add(t.concat('-theme'))
   })
 
   if (arrow) {
     // Add an arrow
-    const arrow = document.createElement('div')
-    arrow.setAttribute('class', `arrow-${arrowSize}`)
-    arrow.setAttribute('data-popper-arrow', '')
-    tooltip.appendChild(arrow)
+    const arrowElement = document.createElement('div')
+    arrowElement.setAttribute('class', `arrow-${arrowSize}`)
+    arrowElement.setAttribute('data-popper-arrow', '')
+    tooltip.appendChild(arrowElement)
   }
 
   if (animateFill) {
@@ -81,7 +81,9 @@ export default function createPopperElement(id, title, settings) {
     }
 
     popper.classList.add('html-template')
-    interactive && popper.setAttribute('tabindex', '-1')
+    if (interactive) {
+      popper.setAttribute('tabindex', '-1')
+    }
     tooltip.setAttribute('data-template-id', templateId)
 
   } else {

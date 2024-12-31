@@ -280,13 +280,14 @@ class Tooltip extends React.Component {
     const Tag = this.props.tag;
     return (
       <Tag
-        ref={(tooltip) =>
-          { this.tooltipDOM = tooltip; }}
-          title={this.props.title}
-          className={this.props.className}
-          tabIndex={this.props.tabIndex}
-          style={{ display: 'inline', ...this.props.style }}
-        >
+        ref={(tooltip) => {
+          this.tooltipDOM = tooltip
+        }}
+        title={this.props.title}
+        className={this.props.className}
+        tabIndex={this.props.tabIndex}
+        style={{ display: 'inline', ...this.props.style }}
+      >
           {this.props.children}
       </Tag>
     );

@@ -26,5 +26,14 @@ export default defineConfig({
 				}
 			}
 		}
+	},
+	test: {
+		include: ['test/**/*.test.ts?(x)'],
+		snapshotFormat: {
+			printBasicPrototype: true
+		},
+		environment: 'jsdom',
+		globals: true,
+		setupFiles: ['./test/setup.ts']
 	}
 })

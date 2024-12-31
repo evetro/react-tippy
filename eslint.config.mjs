@@ -61,7 +61,34 @@ export default [
         project: './tsconfig.json',
       },
       ecmaVersion: 13,
-      globals: { ...es2015, ...node, ...serviceWorker, ...browser }
+      globals: {
+        ...es2015,
+        ...node,
+        ...serviceWorker,
+        ...browser,
+        // suite
+        suite: true,
+        test: true,
+        describe: true,
+        it: true,
+        // chai
+        chai: true,
+        expect: true,
+        assert: true,
+        // typecheck
+        expectTypeOf: true,
+        assertType: true,
+        // utils
+        vitest: true,
+        vi: true,
+        // hooks
+        beforeAll: true,
+        afterAll: true,
+        beforeEach: true,
+        afterEach: true,
+        onTestFinished: true,
+        onTestFailed: true
+      }
     }
   }
 ]

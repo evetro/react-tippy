@@ -1,5 +1,3 @@
-import { expect, describe, it } from 'vitest'
-
 import { getAttributeName, getCorePlacement } from '../src/utils'
 import { POPPER, TOOLTIP, CONTENT, CONTROLLER, TOOLTIPPED_EL, ARROW, CIRCLE } from '../src/selectors'
 

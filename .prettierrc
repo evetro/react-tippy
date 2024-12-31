@@ -1,21 +1,10 @@
 {
-  "arrowParens": "avoid",
-  "semi": true,
-  "tabWidth": 2,
-  "useTabs": false,
+  "arrowParens": "always",
+  "semi": false,
+  "tabWidth": 4,
+  "useTabs": true,
   "experimentalTernaries": false,
   "printWidth": 80,
   "singleQuote": true,
-  "trailingComma": "none",
-  "overrides": [
-    {
-      "files": ["*.tsx", "*.ts"],
-      "options": {
-        "arrowParens": "always",
-        "semi": false,
-        "tabWidth": 4,
-        "useTabs": true
-      }
-    }
-  ]
+  "trailingComma": "none"
 }

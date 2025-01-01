@@ -208,16 +208,22 @@ export default class Tippy {
       if (circle) content.style.opacity = 1
 
       // Interactive tooltips receive a class of 'active'
-      interactive && el.classList.add('active')
+      if (interactive) {
+        el.classList.add('active')
+      }
 
       // Update popper's position on every animation frame
-      sticky && makeSticky(data)
+      if (sticky) {
+        makeSticky(data)
+      }
 
       // Repaint/reflow is required for CSS transition when appending
       triggerReflow(tooltip, circle)
 
       modifyClassList([tooltip, circle], list => {
-        list.contains('tippy-notransition') && list.remove('tippy-notransition')
+        if (list.contains('tippy-notransition')) {
+          list.remove('tippy-notransition')
+        }
         list.remove('leave')
         list.add('enter')
       })
@@ -227,7 +233,9 @@ export default class Tippy {
         if (!isVisible(popper) || data._onShownFired) return
 
         // Focus interactive tooltips only
-        interactive && popper.focus()
+        if (interactive) {
+          popper.focus()
+        }
         // Remove transitions from tooltip
         tooltip.classList.add('tippy-notransition')
         // Prevents shown() from firing more than once from early transition cancellations
@@ -278,7 +286,9 @@ export default class Tippy {
       : Array.isArray(duration) ? duration[1] : duration
 
     data._onShownFired = false
-    interactive && el.classList.remove('active')
+    if (interactive) {
+      el.classList.remove('active')
+    }
 
     popper.style.visibility = 'hidden'
     popper.setAttribute('aria-hidden', 'true')
@@ -289,7 +299,9 @@ export default class Tippy {
     if (circle) content.style.opacity = 0
 
     modifyClassList([tooltip, circle], list => {
-      list.contains('tippy-tooltip') && list.remove('tippy-notransition')
+      if (list.contains('tippy-tooltip')) {
+        list.remove('tippy-notransition')
+      }
       list.remove('enter')
       list.add('leave')
     })
@@ -384,8 +396,8 @@ export default class Tippy {
     el.removeAttribute('data-tooltipped')
     el.removeAttribute('aria-describedby')
 
-    popperInstance && popperInstance.destroy()
-    _mutationObserver && _mutationObserver.disconnect()
+    popperInstance?.destroy?.()
+    _mutationObserver?.disconnect?.()
 
     // Remove from store
     Store.splice(findIndex(Store, d => d.popper === popper), 1)

@@ -75,8 +75,8 @@ export default function getEventListenerHandlers(el, popper, settings) {
       showFn()
     }
 
-    if (mouseenterTouch && Browser.iOS() && el.click) {
-      el.click()
+    if (mouseenterTouch && Browser.iOS()) {
+      el?.click?.()
     }
   }
 
@@ -85,7 +85,8 @@ export default function getEventListenerHandlers(el, popper, settings) {
     if (
       event.type === 'mouseleave'
       && Browser.SUPPORTS_TOUCH
-      && Browser.touch && touchHold
+      && Browser.touch
+      && touchHold
     ) {
       return
     }

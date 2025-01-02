@@ -15,22 +15,16 @@ export default function makeSticky(refData) {
     }
   } = refData
 
-  const setTransitionDuration = () => {
-    popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`
-  }
-
-  const removeTransitionDuration = () => {
-    popper.style[prefix('transitionDuration')] = ''
-  }
-
   const updatePosition = () => {
     popperInstance?.update?.()
 
-    setTransitionDuration()
+    popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`
 
-    isVisible(popper)
-      ? window.requestAnimationFrame(updatePosition)
-      : removeTransitionDuration()
+    if (isVisible(popper)) {
+      window.requestAnimationFrame(updatePosition)
+    } else {
+      popper.style[prefix('transitionDuration')] = ''
+    }
   }
 
   // Wait until Popper's position has been updated initially

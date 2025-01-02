@@ -1,4 +1,11 @@
-import { DefaultsKeys } from './globals'
+import Defaults from '@package/defaults.ts'
+
+import { Browser } from './globals'
+
+/**
+* The keys of the defaults object for reducing down into a new object
+*/
+const DefaultsKeys = Browser.SUPPORTED ? Object.keys(Defaults) : []
 
 /**
 * Returns an object of settings to override global settings

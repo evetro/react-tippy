@@ -1,7 +1,8 @@
+import Defaults from '@package/defaults.ts'
+
 import {
   Browser,
   Store,
-  Defaults
 } from './core/globals'
 import init from './core/init'
 

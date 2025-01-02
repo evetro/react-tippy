@@ -1,4 +1,4 @@
-import { Defaults } from '../core/globals'
+import Defaults from '@package/defaults.ts'
 
 /**
 * Returns the distance taking into account the default distance due to

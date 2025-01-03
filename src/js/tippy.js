@@ -1,9 +1,7 @@
 import Defaults from '@package/defaults.ts'
+import toggleEventListeners from '@package/toggleEventListeners.ts'
 
-import {
-  Browser,
-  Store,
-} from './core/globals'
+import { Browser, Store } from './core/globals'
 import init from './core/init'
 
 /* Utility functions */
@@ -26,7 +24,6 @@ import onTransitionEnd from './core/onTransitionEnd'
 import makeSticky from './core/makeSticky'
 import createTooltips from './core/createTooltips'
 import evaluateSettings from './core/evaluateSettings'
-import toggleEventListeners from './toggleEventListeners.ts'
 
 /**
 * @param {String|Element|Element[]} selector

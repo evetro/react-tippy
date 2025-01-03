@@ -11,6 +11,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "noErrorTruncation": true,
     "jsx": "react-jsx",
     "types": ["vite/client", "vitest/globals"],
     "baseUrl": ".",

@@ -119,7 +119,7 @@ const HeaderWithTooltip = withTooltip(Header, {
 |theme|`dark`|`dark` `light` `transparent` `any_custom_theme`|The CSS styling theme for the tooltip component|
 |title|`null`|String|The shown text for the tooltip component|
 |touchHold|`false`|`true` `false`|Changes the trigger behavior on touch devices. Changes the control from tap to show and tap off to hide, to tap and hold to show, then a release to hide.|
-|trigger|`mouseenter focus`|`mouseenter` `focus` `click` `manual`|Specifies which type of events will trigger a tooltip to show. Separate each by a space. mouseenter is for hovering and touch on mobile, and focus is for keyboard navigation. Use manual if you want to show/hide the tooltip manually/programmatically (see below).|
+|trigger|`mouseenter focus`|any combination of `mouseenter`, `focus`, `focusin`, and `click` separated by a space, or only `manual`|Specifies which type of events will trigger a tooltip to show. Separate each by a space. mouseenter is for hovering and touch on mobile, and focus is for keyboard navigation. Use manual if you want to show/hide the tooltip manually/programmatically (see below).|
 |unmountHTMLWhenHide|`false`|`true` `false`|By default, html component will be mounted at first show and unmount only when your tooltip component is unmounted. When you set unmountHTMLWhenHide is `true`, it will be unmounted whenever tooltip is hidden.|
 |zIndex|`9999`|any integer >= 0|Controls the z index of the Popper element.|
 

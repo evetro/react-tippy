@@ -243,7 +243,6 @@ class Tooltip extends React.Component {
         size: this.props.size,
         sticky: this.props.sticky,
         stickyDuration: this.props.stickyDuration,
-        tag: this.props.tag,
         theme: this.props.theme,
         touchHold: this.props.touchHold,
         trigger: this.props.trigger,

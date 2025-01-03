@@ -101,7 +101,6 @@ export default class Tippy {
   * @param {string} - name
   * @param {string} - value
   */
-
   updateSettings(popper, name, value) {
     const data = find(this.store, data => data.popper === popper)
     if (!data) return

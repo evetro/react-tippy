@@ -42,6 +42,7 @@ export interface TippyOptions extends Partial<TooltipProps> {
 	className?: never
 	style?: never
 	tabIndex?: never
+	tag?: never
 	title?: never
 	renderVirtualDom?: () => void
 	unmountFromVirtualDom?: () => void

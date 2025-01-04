@@ -154,7 +154,6 @@ describe('Tippy internal instance', () => {
 
 		unmount()
 
-		// expect(button._tippy).toBeUndefined();
 		expect(instance.state.isDestroyed).toBe(true)
 	})
 

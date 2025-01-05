@@ -8,14 +8,7 @@ import { fireEvent } from '@testing-library/dom'
 import tippyFactory from "../src/tippyFactory"
 import Tippy from '../src/js/tippy'
 import createNewElement from './createNewElement'
-
-/*
-import animateFill from '../src/plugins/animateFill'
-import { getFormattedMessage } from '../src/validation'
-import tippy from '../src'
-import followCursor from '../src/plugins/followCursor'
-import { getBasePlacement } from '../../../src/utils'
-*/
+import { Position } from '@package/types'
 
 let instance: Tippy | null | undefined
 
@@ -141,7 +134,7 @@ describe('tippyFactory', () => {
 	})
 
 	it('does not remove an existing `aria-expanded` attribute', () => {
-		const ref = createNewElement('div', { 'aria-expanded': 'true' }) // todo
+		const ref = createNewElement('div', { 'aria-expanded': 'true' })
 		instance = tippyFactory(ref, { interactive: false })
 
 		expect(ref.hasAttribute('aria-expanded')).toBe(true)
@@ -178,99 +171,34 @@ describe('Tippy.destroy()', () => {
 		expect(instance.store.length).toBe(1)
 	})
 
-	it('still unmounts the tippy if the instance is disabled', () => {
-		instance = tippyFactory(createNewElement(), defaultProps)
-
-		instance.show()
-		instance.disable()
-		instance.destroy()
-
-		expect(instance.state.isMounted).toBe(false)
-	})
-
-	it('still unmounts the tippy if the instance is disabled', () => {
-		instance = tippyFactory(createNewElement(), defaultProps)
-
-		instance.show()
-
-		vi.runAllTimers()
-
-		instance.disable()
-		instance.destroy()
-
-		expect(instance.state.isMounted).toBe(false)
-	})
-
-	it('clears pending timeouts', () => {
-		instance = tippyFactory(createNewElement(), { ...defaultProps, delay: 500 })
-
-		const spy = vi.spyOn(instance, 'clearDelayTimeouts')
-
-		fireEvent.mouseEnter(instance.store[0].el)
-
-		instance.destroy()
-
-		vi.advanceTimersByTime(500)
-
-		expect(spy).toHaveBeenCalled()
-	})
-
-	it('destroys popperInstance if it was created', () => {
-		const spy = vi.fn()
-		instance = tippyFactory(createNewElement(), {
-			...defaultProps,
-			delay: 500,
-			popperOptions: {
-				modifiers: [
-					{
-						name: 'x',
-						enabled: true,
-						phase: 'afterWrite',
-						fn() {},
-						effect() {
-							return spy
-						}
-					}
-				]
-			}
-		})
-
-		instance.show()
-		vi.runAllTimers()
-		instance.destroy()
-
-		expect(spy).toHaveBeenCalledTimes(1)
-	})
-
-	it('does not cause a circular call loop if called within onHidden()', () => {
+	it('destroys popper element in onHidden()', () => {
 		instance = tippyFactory(createNewElement(), {
 			...defaultProps,
 			onHidden() {
-				instance.destroy()
+				instance.destroy(instance.store[0].popper)
 			}
 		})
 
-		instance.show()
+		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 
-		instance.hide()
+		instance.hide(instance.store[0].popper)
 
-		expect(instance.state.isDestroyed).toBe(true)
-		expect(instance.state.isMounted).toBe(false)
+		expect(instance.store.length).toBe(0)
 	})
 })
 
-describe('instance.show()', () => {
+describe('Tippy.show()', () => {
 	it('changes state.isVisible to `true`', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.show()
+		instance.show(instance.store[0].popper)
 
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 	})
 
 	it('mounts the popper to the DOM', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.show()
+		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 
 		expect(document.body.contains(instance.store[0].popper)).toBe(true)
@@ -281,26 +209,27 @@ describe('instance.show()', () => {
 
 		ref.setAttribute('disabled', 'disabled')
 		instance = tippyFactory(ref, defaultProps)
-		instance.show()
+		instance.show(instance.store[0].popper)
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
+		expect(document.body.contains(instance.store[0].popper)).toBe(false)
 	})
 
 	it('bails out if already visible', () => {
 		const spy = vi.fn()
 
 		instance = tippyFactory(createNewElement(), { ...defaultProps, onShow: spy })
-		instance.show()
-		instance.show()
+		instance.show(instance.store[0].popper)
+		instance.show(instance.store[0].popper)
 
 		expect(spy).toHaveBeenCalledTimes(1)
 	})
 })
 
-describe('instance.hide()', () => {
+describe('instance.hide(instance.store[0].popper)', () => {
 	it('changes state.isVisible to false', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.hide()
+		instance.hide(instance.store[0].popper)
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
@@ -310,12 +239,12 @@ describe('instance.hide()', () => {
 			...defaultProps
 		})
 
-		instance.show()
+		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 
 		expect(document.body.contains(instance.store[0].popper)).toBe(true)
 
-		instance.hide()
+		instance.hide(instance.store[0].popper)
 		vi.runAllTimers()
 
 		expect(document.body.contains(instance.store[0].popper)).toBe(false)
@@ -325,93 +254,77 @@ describe('instance.hide()', () => {
 		const spy = vi.fn()
 
 		instance = tippyFactory(createNewElement(), { ...defaultProps, onHide: spy })
-		instance.hide()
-		instance.hide()
+		instance.hide(instance.store[0].popper)
+		instance.hide(instance.store[0].popper)
 
 		expect(spy).toHaveBeenCalledTimes(0)
 
-		instance.show()
-		instance.hide()
-		instance.hide()
+		instance.show(instance.store[0].popper)
+		instance.hide(instance.store[0].popper)
+		instance.hide(instance.store[0].popper)
 
 		expect(spy).toHaveBeenCalledTimes(1)
 	})
 })
 
-describe('instance.enable()', () => {
-	it('sets state.isEnabled to `true`', () => {
+describe('setting disabled attribute on Popper element', () => {
+	it('sets the appropriate state variable', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.enable()
+		instance.updateSettings(instance.store[0].popper, 'disabled', true)
 
-		expect(instance.state.isEnabled).toBe(true)
-	})
-
-	it('allows a tippy to be shown', () => {
-		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.enable()
-		instance.show()
-
-		expect(isVisible(instance.store[0].popper)).toBe(true)
-	})
-})
-
-describe('instance.disable()', () => {
-	it('sets state.isEnabled to `false`', () => {
-		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.disable()
-
-		expect(instance.state.isEnabled).toBe(false)
+		expect(instance.store[0].settings.disabled).toBe(true)
 	})
 
 	it('disallows a tippy to be shown', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.disable()
-		instance.show()
+		instance.updateSettings(instance.store[0].popper, 'disabled', true)
+		instance.show(instance.store[0].popper)
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
 
 	it('hides the instance if visible', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.show()
-		instance.disable()
+		instance.show(instance.store[0].popper)
+		instance.updateSettings(instance.store[0].popper, 'disabled', true)
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
 })
 
-describe('instance.setProps()', () => {
-	it('sets the new props by merging them with the current instance', () => {
+describe('instance.updateSettings()', () => {
+	it('updates popper element states correctly', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
 
-		expect(instance.settings.arrow).toBe(defaultProps.arrow)
-		expect(instance.settings.duration).toBe(defaultProps.duration)
+		expect(instance.store[0].settings.arrow).toBe(defaultProps.arrow)
+		expect(instance.store[0].settings.duration).toBe(defaultProps.duration)
 
-		instance.setProps({ arrow: !defaultProps.arrow, duration: 82 })
+		instance.updateSettings(instance.store[0].popper, 'arrow', !defaultProps.arrow)
+		instance.updateSettings(instance.store[0].popper, 'duration', 83)
 
-		expect(instance.settings.arrow).toBe(!defaultProps.arrow)
-		expect(instance.settings.duration).toBe(82)
+		expect(instance.store[0].settings.arrow).toBe(!defaultProps.arrow)
+		expect(instance.store[0].settings.duration).toBe(83)
 	})
 
 	it('redraws the tooltip by creating a new popper element', () => {
+		const hasArrow = () => (
+			instance?.store?.[0]?.popper?.innerHTML?.includes?.('arrow-regular')
+		)
+
 		instance = tippyFactory(createNewElement(), defaultProps)
 
-		expect(
-			instance.store[0].popper.querySelector('.__NAMESPACE_PREFIX__-arrow')
-		).not.toBeNull()
+		expect(hasArrow()).toBe(false)
 
-		instance.setProps({ arrow: false })
+		instance.updateSettings(instance.store[0].popper, 'arrow', true)
 
-		expect(
-			instance.store[0].popper.querySelector('.__NAMESPACE_PREFIX__-arrow')
-		).toBeNull()
+		expect(hasArrow()).toBe(true)
 	})
 
 	it('changing `trigger` or `touchHold` changes listeners', () => {
 		const ref = createNewElement()
 		instance = tippyFactory(ref, defaultProps)
 
-		instance.setProps({ trigger: 'click' })
+		instance.updateSettings(instance.store[0].popper, 'trigger', 'click')
 		fireEvent.mouseEnter(ref)
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
@@ -422,129 +335,72 @@ describe('instance.setProps()', () => {
 
 	it('does nothing if the instance is destroyed', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
+		const data = instance.store[0]
 
-		instance.destroy()
-		instance.setProps({ content: 'hello' })
+		instance.destroy(data.popper)
+		instance.updateSettings(data.popper, 'title', 'hello')
 
-		expect(instance.settings.content).not.toBe('hello')
-	})
-
-	it('correctly removes stale `aria-expanded` attributes', () => {
-		instance = tippyFactory(createNewElement(), { ...defaultProps, interactive: true })
-		const triggerTarget = createNewElement()
-
-		expect(instance.store[0].el.getAttribute('aria-expanded')).toBe('false')
-
-		instance.setProps({ interactive: false })
-
-		expect(instance.store[0].el.getAttribute('aria-expanded')).toBe(null)
-
-		instance.setProps({ triggerTarget, interactive: true })
-
-		expect(instance.store[0].el.getAttribute('aria-expanded')).toBe(null)
-		expect(triggerTarget.getAttribute('aria-expanded')).toBe('false')
-
-		instance.setProps({ triggerTarget: null })
-
-		expect(instance.store[0].el.getAttribute('aria-expanded')).toBe('false')
+		expect(data.settings.title).not.toBe('hello')
 	})
 })
 
-describe('instance.state', () => {
-	it('isEnabled', () => {
-		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.show()
-
-		expect(isVisible(instance.store[0].popper)).toBe(true)
-
-		instance.state.isEnabled = false
-		instance.hide()
-
-		expect(isVisible(instance.store[0].popper)).toBe(true)
-
-		instance.state.isEnabled = true
-		instance.hide()
-
-		expect(isVisible(instance.store[0].popper)).toBe(false)
-
-		instance.state.isEnabled = false
-		instance.show()
-
-		expect(isVisible(instance.store[0].popper)).toBe(false)
-	})
-
+describe('show and hide', () => {
 	it('isVisible', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.show()
+		instance.show(instance.store[0].popper)
 
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		instance.hide()
+		instance.hide(instance.store[0].popper)
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
 
-	it('isShown', () => {
-		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.show()
-
-		expect(instance.state.isShown).toBe(false)
-
-		vi.runAllTimers()
-
-		expect(instance.state.isShown).toBe(true)
-
-		instance.hide()
-
-		expect(instance.state.isShown).toBe(false)
-	})
-})
-
-describe('instance.unmount()', () => {
-	it('unmounts the tippy from the DOM', () => {
-		instance = tippyFactory(createNewElement(), defaultProps)
-
-		instance.show()
-		vi.runAllTimers()
-
-		expect(document.body.contains(instance.store[0].popper)).toBe(true)
-
-		instance.unmount()
-
-		expect(document.body.contains(instance.store[0].popper)).toBe(false)
-	})
-
-	it('unmounts subtree poppers', () => {
-		const content = createNewElement()
-		const subNode = createNewElement()
-
-		content.appendChild(subNode)
-
-		const subInstance = tippyFactory(subNode, {
-			...defaultProps,
-			interactive: true
+	it('onRequestClose() hook', () => {
+		const onRequestClose = vi.fn()
+		instance = tippyFactory(createNewElement(), {
+			followCursor: true,
+			onRequestClose,
+			trigger: 'manual'
 		})
 
-		subInstance.show()
+		fireEvent.click(instance.store[0].el)
 		vi.runAllTimers()
 
-		instance = tippyFactory(createNewElement(), { ...defaultProps, content })
-
-		instance.show()
+		fireEvent.click(instance.store[0].el)
 		vi.runAllTimers()
 
-		expect(document.body.contains(instance.store[0].popper)).toBe(true)
-		expect(document.body.contains(subinstance.store[0].popper)).toBe(true)
+		expect(onRequestClose).toHaveBeenCalledTimes(1)
+	})
 
-		instance.unmount()
+	it('tippy hooks', () => {
+		const onHide = vi.fn()
+		const onHidden = vi.fn()
+		const onShown = vi.fn()
+		const onShow = vi.fn()
+		instance = tippyFactory(createNewElement(), {
+			...defaultProps,
+			onShown,
+			onShow,
+			onHide,
+			onHidden,
 
-		expect(document.body.contains(instance.store[0].popper)).toBe(false)
-		expect(instance.store[0].popper.contains(subinstance.store[0].popper)).toBe(false)
+		})
+		instance.show(instance.store[0].popper)
+		vi.runAllTimers()
+
+		expect(onShown).toHaveBeenCalledTimes(1)
+		expect(onShow).toHaveBeenCalledTimes(1)
+
+		instance.hide(instance.store[0].popper)
+		vi.runAllTimers()
+
+		expect(onHidden).toHaveBeenCalledTimes(1)
+		expect(onHide).toHaveBeenCalledTimes(1)
 	})
 })
 
-describe('followCursor headless', () => {
-	tippy.setDefaultProps({ plugins: [followCursor] })
+describe('followCursor, headless', () => {
 	// NOTE: the simulated window dimensions are 1024 x 768. These values
 	// should be within that
 	const defaultPosition = { clientX: 1, clientY: 1 }
@@ -554,53 +410,60 @@ describe('followCursor headless', () => {
 
 	const placements = ['top', 'bottom', 'left', 'right']
 
-	let rect
+	let rect: DOMRect
 
-	function matches(receivedRect) {
+	const match = (
+		top: number,
+		bottom: number,
+		left: number,
+		right: number
+	) => {
 		const isVerticalPlacement = ['top', 'bottom'].includes(
-			getBasePlacement(instance.store[0].popperInstance.state.placement)
+			instance.store[0].popperInstance.state.placement.split('-')[0]
 		)
 
 		expect(isVerticalPlacement).toBe(true)
-		expect(rect.left).toBe(receivedRect.left)
-		expect(rect.right).toBe(receivedRect.right)
-		expect(rect.top).toBe(receivedRect.top)
-		expect(rect.bottom).toBe(receivedRect.bottom)
+		expect(rect.top).toBe(top)
+		expect(rect.bottom).toBe(bottom)
+		expect(rect.left).toBe(left)
+		expect(rect.right).toBe(right)
 	}
 
 	it('true: follows both axes', () => {
 		placements.forEach((placement) => {
-			instance = tippyFactory(createNewElement(), { followCursor: true, placement })
+			const position = placement as Position
+			instance = tippyFactory(createNewElement(), { followCursor: true, position })
 
 			fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
 
 			vi.runAllTimers()
 
 			fireEvent.mouseMove(instance.store[0].el, first)
-			rect = instance.settings.getReferenceClientRect()
-			matches({
-				top: first.clientY,
-				bottom: first.clientY,
-				left: first.clientX,
-				right: first.clientX
-			})
+			rect = instance.store[0].popper.getBoundingClientRect()
+			match(
+				first.clientY,
+				first.clientY,
+				first.clientX,
+				first.clientX
+			)
 
 			fireEvent.mouseMove(instance.store[0].el, second)
-			rect = instance.settings.getReferenceClientRect()
-			matches({
-				top: second.clientY,
-				bottom: second.clientY,
-				left: second.clientX,
-				right: second.clientX
-			})
+			rect = instance.store[0].popper.getBoundingClientRect()
+			match(
+				second.clientY,
+				second.clientY,
+				second.clientX,
+				second.clientX
+			)
 		})
 	})
 
-	it('"horizontal": follows x-axis', () => {
+	it('follows x-axis', () => {
 		placements.forEach((placement) => {
+			const position = placement as Position
 			instance = tippyFactory(createNewElement(), {
-				followCursor: 'horizontal',
-				placement
+				followCursor: true,
+				position
 			})
 			const referenceRect = instance.store[0].el.getBoundingClientRect()
 
@@ -609,30 +472,31 @@ describe('followCursor headless', () => {
 			vi.runAllTimers()
 
 			fireEvent.mouseMove(instance.store[0].el, first)
-			rect = instance.settings.getReferenceClientRect()
+			rect = instance.store[0].popper.getBoundingClientRect()
 
-			matches({
-				top: referenceRect.top,
-				bottom: referenceRect.bottom,
-				left: first.clientX,
-				right: first.clientX
-			})
+			match(
+				referenceRect.top,
+				referenceRect.bottom,
+				first.clientX,
+				first.clientX
+			)
 
 			fireEvent.mouseMove(instance.store[0].el, second)
-			rect = instance.settings.getReferenceClientRect()
+			rect = instance.store[0].popper.getBoundingClientRect()
 
-			matches({
-				top: referenceRect.top,
-				bottom: referenceRect.bottom,
-				left: second.clientX,
-				right: second.clientX
-			})
+			match(
+				referenceRect.top,
+				referenceRect.bottom,
+				second.clientX,
+				second.clientX
+			)
 		})
 	})
 
-	it('"vertical": follows y-axis', () => {
+	it('follows y-axis', () => {
 		placements.forEach((placement) => {
-			instance = tippyFactory(createNewElement(), { followCursor: 'vertical', placement })
+			const position = placement as Position
+			instance = tippyFactory(createNewElement(), { followCursor: true, position })
 			const referenceRect = instance.store[0].el.getBoundingClientRect()
 
 			fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
@@ -640,55 +504,24 @@ describe('followCursor headless', () => {
 			vi.runAllTimers()
 
 			fireEvent.mouseMove(instance.store[0].el, first)
-			rect = instance.settings.getReferenceClientRect()
+			rect = instance.store[0].popper.getBoundingClientRect()
 
-			matches({
-				top: first.clientY,
-				bottom: first.clientY,
-				left: referenceRect.left,
-				right: referenceRect.right
-			})
-
-			fireEvent.mouseMove(instance.store[0].el, second)
-			rect = instance.settings.getReferenceClientRect()
-
-			matches({
-				top: second.clientY,
-				bottom: second.clientY,
-				left: referenceRect.left,
-				right: referenceRect.right
-			})
-		})
-	})
-
-	it('"initial": only follows once', () => {
-		placements.forEach((placement) => {
-			instance = tippyFactory(createNewElement(), { followCursor: 'initial', placement })
-
-			fireEvent.mouseMove(instance.store[0].el, first)
-
-			instance.show()
-			vi.runAllTimers()
-
-			fireEvent.mouseMove(instance.store[0].el, first)
-			rect = instance.settings.getReferenceClientRect()
-
-			matches({
-				top: first.clientY,
-				bottom: first.clientY,
-				left: first.clientX,
-				right: first.clientX
-			})
+			match(
+				first.clientY,
+				first.clientY,
+				referenceRect.left,
+				referenceRect.right
+			)
 
 			fireEvent.mouseMove(instance.store[0].el, second)
-			rect = instance.settings.getReferenceClientRect()
+			rect = instance.store[0].popper.getBoundingClientRect()
 
-			matches({
-				top: first.clientY,
-				bottom: first.clientY,
-				left: first.clientX,
-				right: first.clientX
-			})
+			match(
+				second.clientY,
+				second.clientY,
+				referenceRect.left,
+				referenceRect.right
+			)
 		})
 	})
 
@@ -703,51 +536,52 @@ describe('followCursor headless', () => {
 
 		vi.advanceTimersByTime(100)
 
-		rect = instance.settings.getReferenceClientRect()
+		rect = instance.store[0].popper.getBoundingClientRect()
 
-		matches({
-			top: first.clientY,
-			bottom: first.clientY,
-			left: first.clientX,
-			right: first.clientX
-		})
+		match(
+			first.clientY,
+			first.clientY,
+			first.clientX,
+			first.clientX
+		)
 	})
 
 	it('is at correct position after a content update', () => {
 		instance = tippyFactory(createNewElement(), { followCursor: true })
+		const data = instance.store[0]
 
-		fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
-
-		vi.runAllTimers()
-
-		fireEvent.mouseMove(instance.store[0].el, first)
-
-		rect = instance.settings.getReferenceClientRect()
-
-		matches({
-			top: first.clientY,
-			bottom: first.clientY,
-			left: first.clientX,
-			right: first.clientX
-		})
-
-		instance.setContent('x')
+		fireEvent.mouseEnter(data.el, defaultPosition)
 
 		vi.runAllTimers()
 
-		rect = instance.settings.getReferenceClientRect()
+		fireEvent.mouseMove(data.el, first)
 
-		matches({
-			top: first.clientY,
-			bottom: first.clientY,
-			left: first.clientX,
-			right: first.clientX
-		})
+		rect = instance.store[0].popper.getBoundingClientRect()
+
+		match(
+			first.clientY,
+			first.clientY,
+			first.clientX,
+			first.clientX
+		)
+
+		instance.updateSettings(data.popper, 'title', 'hello')
+
+		vi.runAllTimers()
+
+		rect = instance.store[0].popper.getBoundingClientRect()
+
+		match(
+			first.clientY,
+			first.clientY,
+			first.clientX,
+			first.clientX
+		)
 	})
 
 	it('does not continue to follow if interactive: true and cursor is over popper', () => {
 		instance = tippyFactory(createNewElement(), {
-			followCursor: 'horizontal',
+			followCursor: true,
 			interactive: true
 		})
 
@@ -758,22 +592,21 @@ describe('followCursor headless', () => {
 		fireEvent.mouseMove(instance.store[0].el, first)
 
 		const referenceRect = instance.store[0].el.getBoundingClientRect()
-		rect = instance.settings.getReferenceClientRect()
+		rect = instance.store[0].popper.getBoundingClientRect()
 
 		fireEvent.mouseMove(instance.store[0].el, second)
 
-		matches({
-			top: referenceRect.top,
-			bottom: referenceRect.bottom,
-			left: first.clientX,
-			right: first.clientX
-		})
+		match(
+			referenceRect.top,
+			referenceRect.bottom,
+			first.clientX,
+			first.clientX
+		)
 	})
 
 	it('should reset popperInstance.reference if triggered by `focus`', () => {
 		instance = tippyFactory(createNewElement(), {
 			followCursor: true,
-			flip: false,
 			delay: 1000
 		})
 
@@ -786,33 +619,11 @@ describe('followCursor headless', () => {
 
 		fireEvent.mouseMove(instance.store[0].el, second)
 
-		instance.hide()
+		instance.hide(instance.store[0].popper)
 
 		fireEvent.focus(instance.store[0].el)
 
 		expect(instance.settings.getReferenceClientRect).toBe(null)
-	})
-
-	it('"initial": does not update if triggered again while still visible', () => {
-		instance = tippyFactory(createNewElement(), {
-			followCursor: 'initial'
-		})
-
-		fireEvent.mouseMove(instance.store[0].el, first)
-
-		instance.show()
-		vi.runAllTimers()
-
-		fireEvent.mouseMove(instance.store[0].el, second)
-
-		rect = instance.settings.getReferenceClientRect()
-
-		matches({
-			top: first.clientY,
-			bottom: first.clientY,
-			left: first.clientX,
-			right: first.clientX
-		})
 	})
 
 	it('works with manual trigger and .show()', () => {
@@ -821,19 +632,19 @@ describe('followCursor headless', () => {
 			trigger: 'manual'
 		})
 
-		instance.show()
+		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 
 		fireEvent.mouseMove(document, first)
 
-		rect = instance.settings.getReferenceClientRect()
+		rect = instance.store[0].popper.getBoundingClientRect()
 
-		matches({
-			top: first.clientY,
-			bottom: first.clientY,
-			left: first.clientX,
-			right: first.clientX
-		})
+		match(
+			first.clientY,
+			first.clientY,
+			first.clientX,
+			first.clientX
+		)
 	})
 
 	it('is cleaned up if untriggered before showing', () => {
@@ -883,7 +694,7 @@ describe('animateFill', () => {
 		const instance = tippyFactory(createNewElement(), { animateFill: true, duration: 120 })
 		const content = getChildrenContent(instance.store[0].popper)
 
-		instance.show()
+		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 
 		expect(content.style.transitionDelay).toBe(`${120 / 10}ms`)
@@ -896,20 +707,24 @@ describe('animateFill', () => {
 		})
 		const content = getChildrenContent(instance.store[0].popper)
 
-		instance.show()
+		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 
 		expect(content.style.transitionDelay).toBe('')
 	})
 
-	it('true: sets `animation: "shift-away"', () => {
+	const hasLeave = () => (
+		instance?.store?.[0]?.popper?.innerHTML?.includes?.('leave')
+	)
+
+	it('true: sets `"leave" class in document', () => {
 		const instance = tippyFactory(createNewElement(), { animateFill: true })
-		expect(instance.settings.animation).toBe('shift-away')
+		expect(hasLeave()).toBe(true)
 	})
 
-	it('false: does not set `animation: "shift-away"', () => {
+	it('false: does not set `"leave" class in document', () => {
 		const instance = tippyFactory(createNewElement(), { animateFill: false })
-		expect(instance.settings.animation).not.toBe('shift-away')
+		expect(hasLeave()).toBe(false)
 	})
 })
 

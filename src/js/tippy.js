@@ -114,7 +114,7 @@ export default class Tippy {
   * @param {Element} popper
   * @param {Number} customDuration (optional)
   */
-  show(popper, customDuration) {
+  show(popper, customDuration = undefined) {
     if (this.destroyed) return
 
     const data = find(this.store, data => data.popper === popper)
@@ -250,7 +250,7 @@ export default class Tippy {
   * @param {Element} popper
   * @param {Number} customDuration (optional)
   */
-  hide(popper, customDuration) {
+  hide(popper, customDuration = undefined) {
     if (this.destroyed) return
 
     this.callbacks.hide?.call?.(popper)
@@ -293,7 +293,9 @@ export default class Tippy {
 
     applyTransitionDuration([tooltip, circle, circle ? content : null], _duration)
 
-    if (circle) content.style.opacity = 0
+    if (circle) {
+      content.style.opacity = 0
+    }
 
     modifyClassList([tooltip, circle], list => {
       if (list.contains('tippy-tooltip')) {

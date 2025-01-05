@@ -1,6 +1,9 @@
 import getCorePlacement from '../utils/getCorePlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 
+import { ARROW, CIRCLE } from '@package/selectors'
+import { getAttributeName } from '@package/utils'
+
 /**
 * Creates a popper element then returns it
 * @param {Number} id - the popper id
@@ -43,7 +46,7 @@ export default function createPopperElement(id, title, settings) {
     // Add an arrow
     const arrowElement = document.createElement('div')
     arrowElement.setAttribute('class', `arrow-${arrowSize}`)
-    arrowElement.setAttribute('data-popper-arrow', '')
+    arrowElement.setAttribute(getAttributeName(ARROW), '')
     tooltip.appendChild(arrowElement)
   }
 
@@ -52,7 +55,7 @@ export default function createPopperElement(id, title, settings) {
     tooltip.setAttribute('data-animatefill', '')
     const circle = document.createElement('div')
     circle.setAttribute('class', 'leave')
-    circle.setAttribute('data-popper-circle', '')
+    circle.setAttribute(getAttributeName(CIRCLE), '')
     tooltip.appendChild(circle)
   }
 

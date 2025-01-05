@@ -50,7 +50,9 @@ const defaultProps = {
   zIndex: 9999
 };
 
-const propKeys = Object.keys(defaultProps);
+const banned =  ['disabled', 'open', 'html', 'reactDOM', 'children', 'className', 'style', 'tabIndex', 'tag', 'appendTo', 'onHidden', 'onHide', 'onRequestClose', 'onShow', 'onShown', 'flipModifierOptions'];
+const outBannedKeys = (key) => !banned.includes(key);
+const propKeys = Object.keys(defaultProps).filter(outBannedKeys);
 
 const noBrowser = () => (
   typeof window === 'undefined' || typeof document === 'undefined'

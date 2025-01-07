@@ -1,6 +1,6 @@
 export default function createNewElement(
 	nodeName = 'button',
-	attributes: Record<string, any> = {},
+	attributes: Record<string, any> = { title: 'Tippy Content' },
 	to = document.body
 ) {
 	const el = document.createElement(nodeName)

@@ -5,6 +5,8 @@ import evaluateSettings from './evaluateSettings'
 
 import removeTitle from '../utils/removeTitle'
 
+let global_id = 0
+
 /**
 * Creates tooltips for all el elements that match the instance's selector
 * @param {Element[]} els Resolved array of Element instances
@@ -14,8 +16,8 @@ export default function createTooltips(els) {
   const settings = evaluateSettings(this.settings)
   const { trigger, touchHold, useVirtualDom } = settings
 
-  const cb = (store, el, index) => {
-    const id = index + 1
+  const cb = (store, el) => {
+    const id = ++global_id
 
     const title = el.getAttribute('title')
     if (!title && !useVirtualDom) return store

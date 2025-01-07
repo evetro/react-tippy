@@ -47,7 +47,11 @@ export default class Tippy {
         hide: onHide,
         hidden: onHidden
       })
-      Object.assign(this.settings, Defaults, settings)
+      Object.assign(
+        this.settings,
+        Defaults,
+        Object.entries(settings).reduce(nullishFilter, {})
+      )
       this.store = createTooltips.call(this, getArrayOfElements(selector))
       Store.push.apply(Store, this.store)
     } else {
@@ -421,4 +425,13 @@ export default class Tippy {
     this.store = null
     this.destroyed = true
   }
+}
+
+//
+// private utility modules
+//
+
+function nullishFilter(obj, [key, value]) {
+  if (value == null) return obj
+  return { ...obj, [key]: value }
 }

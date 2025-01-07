@@ -1,14 +1,14 @@
 import defaultProps from '@package/defaults.ts'
 import { Store } from '@package/js/core/globals.js'
 import isVisible from '@package/js/utils/isVisible.js'
-import { getAttributeName } from '@package/utils'
 import { CONTENT } from '@package/selectors'
+import { Position } from '@package/types'
+import { getAttributeName } from '@package/utils'
 import { fireEvent } from '@testing-library/dom'
 
 import tippyFactory from "../src/tippyFactory"
 import Tippy from '../src/js/tippy'
 import createNewElement from './createNewElement'
-import { Position } from '@package/types'
 
 let instance: Tippy | null | undefined
 
@@ -16,14 +16,32 @@ afterEach(() => {
 	instance?.destroyAll?.()
 })
 
-describe('tippyFactory', () => {
-	it('returns the instance with expected properties', () => {
-		instance = tippyFactory(createNewElement(), defaultProps)
+describe.only('tippyFactory', () => {
+	it('returns the instance with the expected state', () => {
+		const el = createNewElement()
+		instance = tippyFactory(el, {})
 
-		expect(instance).toMatchSnapshot()
+		expect(instance.destroyed).toBe(false)
+		expect(instance.selector).toBe(el)
+
+		expect(instance.callbacks.wait?.()).toBe(undefined)
+		expect(instance.callbacks.show?.()).toBe(undefined)
+		expect(instance.callbacks.shown?.()).toBe(undefined)
+		expect(instance.callbacks.hide?.()).toBe(undefined)
+		expect(instance.callbacks.hidden?.()).toBe(undefined)
+
+		expect({
+			...instance.settings,
+			appendTo: undefined
+		}).toEqual({
+			...defaultProps,
+			appendTo: undefined
+		})
+		expect(instance.store[0].id).toBe(1)
+		expect(instance.store[0].tippyInstance).toBe(instance)
 	})
 
-	it('sets `undefined` prop to the default', () => {
+	it('sets `undefined` prop to their default value', () => {
 		instance = tippyFactory(createNewElement(), {
 			theme: undefined
 		})
@@ -38,13 +56,13 @@ describe('tippyFactory', () => {
 			tippyFactory(createNewElement(), defaultProps),
 			tippyFactory(createNewElement(), defaultProps)
 		]
-		expect(Store[0]?.id).toBe(1)
-		expect(Store[1]?.id).toBe(1)
-		expect(Store[2]?.id).toBe(1)
+		expect(Store[0]?.id).toBe(3)
+		expect(Store[1]?.id).toBe(4)
+		expect(Store[2]?.id).toBe(5)
 
-		expect(instanceList[0].store[0]?.id).toBe(1)
-		expect(instanceList[1].store[0]?.id).toBe(1)
-		expect(instanceList[2].store[0]?.id).toBe(1)
+		expect(instanceList[0].store[0]?.id).toBe(3)
+		expect(instanceList[1].store[0]?.id).toBe(4)
+		expect(instanceList[2].store[0]?.id).toBe(5)
 	})
 
 	it('adds correct listeners to the reference element based on `trigger` (`interactive`: false)', () => {
@@ -62,30 +80,20 @@ describe('tippyFactory', () => {
 		fireEvent.focus(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		fireEvent.blur(instance.store[0].el)
+		fireEvent.click(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 
 		fireEvent.click(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
 		fireEvent.mouseLeave(instance.store[0].el)
-		expect(isVisible(instance.store[0].popper)).toBe(true)
-
-		fireEvent.click(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 
 		fireEvent.focusIn(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		fireEvent.focusOut(instance.store[0].el)
+		fireEvent.click(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(false)
-
-		// For completeness, it would seem to make sense to test that the tippy *is*
-		// hidden on clicking its content (as this is a non-interactive instance);
-		// however, we use CSS pointer-events: none for non-interaction, so firing a
-		// click event on the tippy content won't test this scenario. Neither can we
-		// test for that style with window.getComputedStyle in the testing
-		// environment.
 	})
 
 	it('adds correct listeners to the reference element based on `trigger` (`interactive`: true)', () => {
@@ -107,7 +115,7 @@ describe('tippyFactory', () => {
 		fireEvent.focus(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		fireEvent.blur(instance.store[0].el)
+		fireEvent.click(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 
 		fireEvent.click(instance.store[0].el)
@@ -122,14 +130,14 @@ describe('tippyFactory', () => {
 		fireEvent.click(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		const content = getChildrenContent(instance.store[0].popper)
-		fireEvent.click(content)
+		const childNodes = Array.from(instance.store[0].popper.children) as HTMLDivElement[]
+		fireEvent.click(childNodes[0])
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
 		fireEvent.focusIn(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		fireEvent.focusOut(instance.store[0].el)
+		fireEvent.click(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
 

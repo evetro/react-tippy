@@ -4,6 +4,12 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
 	plugins: [react()],
+	resolve: {
+		alias: {
+			'@package': resolve('./src')
+		}
+	},
+	root: '.',
 	build: {
 		lib: {
 			// Could also be a dictionary or array of multiple entry points

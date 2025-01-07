@@ -4,6 +4,7 @@ import defer from '../utils/defer'
 import prefix from '../utils/prefix'
 import getCorePlacement from '../utils/getCorePlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
+import { TOOLTIP } from '../../selectors.ts'
 
 /**
 * Creates a new popper instance
@@ -62,9 +63,10 @@ export default function createPopperInstance(data) {
     enabled: true,
     phase: 'afterWrite',
     fn({ state }) {
-      const { attributes, styles } = state
-      const placementKey = getCorePlacement(attributes['data-popper-placement'])
-      Object.assign(styles['tippy-tooltip'], {
+      const { attributes } = state
+      const tooltip = popper.querySelector(TOOLTIP)
+      const placementKey = getCorePlacement(attributes.popper['data-popper-placement'])
+      Object.assign(tooltip.style, {
         bottom: '',
         left: '',
         right: '',

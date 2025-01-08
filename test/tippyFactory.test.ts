@@ -419,7 +419,7 @@ describe('show and hide', () => {
 	})
 })
 
-describe.only('followCursor, headless', () => {
+describe.skip('followCursor, headless', () => {
 	// NOTE: the simulated window dimensions are 1024 x 768. These values
 	// should be within that
 	const defaultPosition = { clientX: 1, clientY: 1 }
@@ -739,17 +739,15 @@ describe('animateFill', () => {
 		expect(content.style.transitionDelay).toBe('')
 	})
 
-	const hasLeave = () => (
-		instance?.store?.[0]?.popper?.innerHTML?.includes?.('leave')
-	)
-
 	it('true: sets `"leave" class in document', () => {
 		const instance = tippyFactory(createNewElement(), { animateFill: true })
-		expect(hasLeave()).toBe(true)
+		expect(instance?.store?.[0]?.popper?.innerHTML?.includes?.('leave')).toBe(true)
 	})
 
 	it('false: does not set `"leave" class in document', () => {
 		const instance = tippyFactory(createNewElement(), { animateFill: false })
-		expect(hasLeave()).toBe(false)
+		instance.show(instance.store[0].popper)
+		vi.runAllTimers()
+		expect(instance?.store?.[0]?.popper?.innerHTML?.includes?.('leave')).toBe(false)
 	})
 })

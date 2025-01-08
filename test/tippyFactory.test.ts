@@ -201,7 +201,7 @@ describe('Tippy.destroy()', () => {
 	})
 })
 
-describe.only('Tippy.show()', () => {
+describe('Tippy.show()', () => {
 	it('changes state.isVisible to `true`', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
 		instance.show(instance.store[0].popper)
@@ -244,6 +244,7 @@ describe('Tippy.hide()', () => {
 	it('changes state.isVisible to false', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
 		instance.hide(instance.store[0].popper)
+		vi.runAllTimers()
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
@@ -281,18 +282,20 @@ describe('Tippy.hide()', () => {
 	})
 })
 
-describe('setting disabled attribute on Popper element', () => {
+describe.only('Tippy.disable(): setting disabled attribute on the Popper element', () => {
 	it('sets the appropriate state variable', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.updateSettings(instance.store[0].popper, 'disabled', true)
+		instance.disable(instance.store[0].popper)
 
 		expect(instance.store[0].settings.disabled).toBe(true)
 	})
 
 	it('disallows a tippy to be shown', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
-		instance.updateSettings(instance.store[0].popper, 'disabled', true)
+		instance.disable(instance.store[0].popper)
+		vi.runAllTimers()
 		instance.show(instance.store[0].popper)
+		vi.runAllTimers()
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
@@ -300,7 +303,9 @@ describe('setting disabled attribute on Popper element', () => {
 	it('hides the instance if visible', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
 		instance.show(instance.store[0].popper)
-		instance.updateSettings(instance.store[0].popper, 'disabled', true)
+		vi.runAllTimers()
+		instance.disable(instance.store[0].popper)
+		vi.runAllTimers()
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})

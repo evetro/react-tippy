@@ -68,7 +68,7 @@ export default class Tippy {
   */
   getPopperElement(el) {
     try {
-      return find(this.store, data => data.el === el).popper
+      return find(this.store, d => d.el === el).popper
     } catch (e) {
       console.error('[getPopperElement]: Element passed as the argument does not exist in the instance')
     }
@@ -81,7 +81,7 @@ export default class Tippy {
   */
   getReferenceElement(popper) {
     try {
-      return find(this.store, data => data.popper === popper).el
+      return find(this.store, d => d.popper === popper).el
     } catch (e) {
       console.error('[getReferenceElement]: Popper passed as the argument does not exist in the instance')
     }
@@ -93,7 +93,30 @@ export default class Tippy {
   * @return {Object}
   */
   getReferenceData(ref) {
-    return find(this.store, data => data.el === ref || data.popper === ref)
+    return find(this.store, d => d.el === ref || d.popper === ref)
+  }
+
+  /**
+  * Enable a Popper element
+  * @param {DOMElement} - popper
+  */
+  enable(popper) {
+    this.updateSettings(popper, 'disabled', false)
+    find(
+      this.store, d => d.popper === popper
+    )?.el?.setAttribute?.('disabled', '')
+  }
+
+  /**
+  * Disable a Popper element
+  * @param {DOMElement} - popper
+  */
+  disable(popper) {
+    this.updateSettings(popper, 'disabled', true)
+    find(
+      this.store, d => d.popper === popper
+    )?.el?.setAttribute?.('disabled', 'disabled')
+    if (isVisible(popper)) this.hide(popper)
   }
 
   /**
@@ -103,7 +126,7 @@ export default class Tippy {
   * @param {string} - value
   */
   updateSettings(popper, name, value) {
-    const data = find(this.store, data => data.popper === popper)
+    const data = find(this.store, d => d.popper === popper)
     if (!data) return
 
     const newSettings = {
@@ -111,7 +134,7 @@ export default class Tippy {
       [name]: value,
     }
     data.settings = evaluateSettings(newSettings);
-  };
+  }
 
   /**
   * Shows a popper
@@ -256,11 +279,11 @@ export default class Tippy {
   * @param {Number} customDuration (optional)
   */
   hide(popper, customDuration = undefined) {
-    if (this.destroyed) return
+    if (this.destroyed || !isVisible(popper)) return
 
     this.callbacks.hide?.call?.(popper)
 
-    const data = find(this.store, data => data.popper === popper)
+    const data = find(this.store, d => d.popper === popper)
     if (!data) return;
 
     const { tooltip, circle, content } = getInnerElements(popper)
@@ -349,7 +372,7 @@ export default class Tippy {
   update(popper) {
     if (this.destroyed) return
 
-    const data = find(this.store, data => data.popper === popper)
+    const data = find(this.store, d => d.popper === popper)
     if (!data) return;
 
     const { content } = getInnerElements(popper)
@@ -371,7 +394,7 @@ export default class Tippy {
   */
   destroy(popper) {
     if (this.destroyed) return
-    const data = find(this.store, data => data.popper === popper)
+    const data = find(this.store, d => d.popper === popper)
     if (!data) return;
 
     const {
@@ -418,7 +441,7 @@ export default class Tippy {
       this.destroy(popper)
       // Ensures that the filter method is called only once
       if (index === storeLength - 1) {
-        this.store = Store.filter(data => data.tippyInstance === this)
+        this.store = Store.filter(d => d.tippyInstance === this)
       }
     })
 

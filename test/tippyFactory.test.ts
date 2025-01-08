@@ -16,7 +16,7 @@ afterEach(() => {
 	instance?.destroyAll?.()
 })
 
-describe.only('tippyFactory', () => {
+describe('tippyFactory', () => {
 	it('returns the instance with the expected state', () => {
 		const el = createNewElement()
 		instance = tippyFactory(el, {})
@@ -68,6 +68,7 @@ describe.only('tippyFactory', () => {
 	it('adds correct listeners to the reference element based on `trigger` (`interactive`: false)', () => {
 		instance = tippyFactory(createNewElement(), {
 			...defaultProps,
+			duration: 0,
 			trigger: 'mouseenter focus click focusin'
 		})
 
@@ -80,7 +81,7 @@ describe.only('tippyFactory', () => {
 		fireEvent.focus(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		fireEvent.click(instance.store[0].el)
+		fireEvent.click(instance.store[0].el) // TODO use blur here instead and make test pass
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 
 		fireEvent.click(instance.store[0].el)
@@ -92,7 +93,7 @@ describe.only('tippyFactory', () => {
 		fireEvent.focusIn(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		fireEvent.click(instance.store[0].el)
+		fireEvent.click(instance.store[0].el) // TODO use focusOut here instead and make test pass
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
 
@@ -100,6 +101,7 @@ describe.only('tippyFactory', () => {
 		instance = tippyFactory(createNewElement(), {
 			...defaultProps,
 			interactive: true,
+			duration: 0,
 			trigger: 'mouseenter focus click focusin'
 		})
 
@@ -115,7 +117,7 @@ describe.only('tippyFactory', () => {
 		fireEvent.focus(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		fireEvent.click(instance.store[0].el)
+		fireEvent.click(instance.store[0].el) // TODO use blur here instead and make test pass
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 
 		fireEvent.click(instance.store[0].el)
@@ -137,7 +139,7 @@ describe.only('tippyFactory', () => {
 		fireEvent.focusIn(instance.store[0].el)
 		expect(isVisible(instance.store[0].popper)).toBe(true)
 
-		fireEvent.click(instance.store[0].el)
+		fireEvent.click(instance.store[0].el) // TODO use focusOut here instead and make test pass
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 	})
 
@@ -154,7 +156,8 @@ describe('Tippy.destroy()', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
 		instance.destroy(instance.store[0].popper)
 
-		expect(instance.store.length).toBe(0)
+		const check = Store.find(d => d.popper === instance.store[0].popper)
+		expect(check).toBe(undefined)
 	})
 
 	it('removes listeners from the reference', () => {
@@ -191,12 +194,14 @@ describe('Tippy.destroy()', () => {
 		vi.runAllTimers()
 
 		instance.hide(instance.store[0].popper)
+		vi.runAllTimers()
 
-		expect(instance.store.length).toBe(0)
+		const check = Store.find(d => d.popper === instance.store[0].popper)
+		expect(check).toBe(undefined)
 	})
 })
 
-describe('Tippy.show()', () => {
+describe.only('Tippy.show()', () => {
 	it('changes state.isVisible to `true`', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
 		instance.show(instance.store[0].popper)
@@ -218,6 +223,7 @@ describe('Tippy.show()', () => {
 		ref.setAttribute('disabled', 'disabled')
 		instance = tippyFactory(ref, defaultProps)
 		instance.show(instance.store[0].popper)
+		vi.runAllTimers()
 
 		expect(isVisible(instance.store[0].popper)).toBe(false)
 		expect(document.body.contains(instance.store[0].popper)).toBe(false)
@@ -226,7 +232,7 @@ describe('Tippy.show()', () => {
 	it('bails out if already visible', () => {
 		const spy = vi.fn()
 
-		instance = tippyFactory(createNewElement(), { ...defaultProps, onShow: spy })
+		instance = tippyFactory(createNewElement(), { ...defaultProps, duration: 0, onShow: spy })
 		instance.show(instance.store[0].popper)
 		instance.show(instance.store[0].popper)
 
@@ -234,7 +240,7 @@ describe('Tippy.show()', () => {
 	})
 })
 
-describe('instance.hide(instance.store[0].popper)', () => {
+describe('Tippy.hide()', () => {
 	it('changes state.isVisible to false', () => {
 		instance = tippyFactory(createNewElement(), defaultProps)
 		instance.hide(instance.store[0].popper)

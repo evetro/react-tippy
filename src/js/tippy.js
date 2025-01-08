@@ -119,10 +119,11 @@ export default class Tippy {
   * @param {Number} customDuration (optional)
   */
   show(popper, customDuration = undefined) {
-    if (this.destroyed) return
+    if (this.destroyed || isVisible(popper)) return
 
-    const data = find(this.store, data => data.popper === popper)
-    if (!data) return;
+    const data = find(this.store, d => d.popper === popper)
+    if (!data) return
+    if (data?.el.getAttribute?.('disabled') === 'disabled') return
 
     const { tooltip, circle, content } = getInnerElements(popper)
 
@@ -370,7 +371,6 @@ export default class Tippy {
   */
   destroy(popper) {
     if (this.destroyed) return
-
     const data = find(this.store, data => data.popper === popper)
     if (!data) return;
 

@@ -7,15 +7,19 @@ import { matches } from './matches'
 * @return {Element}
 */
 export default function closest(element, parentSelector) {
-  const _closest = Element.prototype.closest || function(selector) {
-    let el = this
-    while (el) {
-      if (matches.call(el, selector)) {
-        return el
-      }
-      el = el.parentElement
-    }
+  if (!Element.prototype.closest) {
+    return closestPolyfilled.call(element, parentSelector)
   }
+  return element.closest(parentSelector)
+}
 
-  return _closest.call(element, parentSelector)
+function closestPolyfilled(selector) {
+  let el = this
+  while (el) {
+    if (matches.call(el, selector)) {
+      return el
+    }
+    el = el.parentElement
+  }
+  return undefined
 }

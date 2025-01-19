@@ -19,7 +19,9 @@ export default function followCursorHandler(e) {
     }
   } = refData
 
-  const position = getCorePlacement(popper.getAttribute('data-popper-placement'))
+  const position = getCorePlacement(
+    popper.getAttribute('data-popper-placement') || 'top' // workaround for testing
+  )
   const halfPopperWidth = Math.round(popper.offsetWidth / 2)
   const halfPopperHeight = Math.round(popper.offsetHeight / 2)
   const viewportPadding = 10

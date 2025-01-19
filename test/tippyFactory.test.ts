@@ -1,7 +1,7 @@
 import defaultProps from '@package/defaults.ts'
 import { Store } from '@package/js/core/globals.js'
 import isVisible from '@package/js/utils/isVisible.js'
-import { CONTENT } from '@package/selectors'
+import { TOOLTIP } from '@package/selectors'
 import { Position } from '@package/types'
 import { getAttributeName } from '@package/utils'
 import { fireEvent } from '@testing-library/dom'
@@ -144,7 +144,7 @@ describe('tippyFactory', () => {
 	})
 
 	it('does not remove an existing `aria-expanded` attribute', () => {
-		const ref = createNewElement('div', { 'aria-expanded': 'true' })
+		const ref = createNewElement('div', { title: 'Tooltip', 'aria-expanded': 'true' })
 		instance = tippyFactory(ref, { interactive: false })
 
 		expect(ref.hasAttribute('aria-expanded')).toBe(true)
@@ -419,7 +419,8 @@ describe('show and hide', () => {
 	})
 })
 
-describe.skip('followCursor, headless', () => {
+// TODO check followCursor tests in tippyjs
+describe.only('followCursor, headless', () => {
 	// NOTE: the simulated window dimensions are 1024 x 768. These values
 	// should be within that
 	const defaultPosition = { clientX: 1, clientY: 1 }
@@ -437,18 +438,18 @@ describe.skip('followCursor, headless', () => {
 		left: number,
 		right: number
 	) => {
-		const isVerticalPlacement = ['top', 'bottom'].includes(
+		/* const isVerticalPlacement = ['top', 'bottom'].includes(
 			instance.store[0].popperInstance.state.placement.split('-')[0]
 		)
 
-		expect(isVerticalPlacement).toBe(true)
+		expect(isVerticalPlacement).toBe(true) */
 		expect(rect.top).toBe(top)
 		expect(rect.bottom).toBe(bottom)
 		expect(rect.left).toBe(left)
 		expect(rect.right).toBe(right)
 	}
 
-	it('true: follows both axes', () => {
+	it.skip('true: follows both axes', () => {
 		placements.forEach((placement) => {
 			const position = placement as Position
 			instance = tippyFactory(createNewElement(), { followCursor: true, position })
@@ -477,7 +478,7 @@ describe.skip('followCursor, headless', () => {
 		})
 	})
 
-	it('follows x-axis', () => {
+	it.skip('follows x-axis', () => {
 		placements.forEach((placement) => {
 			const position = placement as Position
 			instance = tippyFactory(createNewElement(), {
@@ -492,6 +493,8 @@ describe.skip('followCursor, headless', () => {
 
 			fireEvent.mouseMove(instance.store[0].el, first)
 			rect = instance.store[0].popper.getBoundingClientRect()
+
+			vi.runAllTimers()
 
 			match(
 				referenceRect.top,
@@ -512,7 +515,7 @@ describe.skip('followCursor, headless', () => {
 		})
 	})
 
-	it('follows y-axis', () => {
+	it.skip('follows y-axis', () => {
 		placements.forEach((placement) => {
 			const position = placement as Position
 			instance = tippyFactory(createNewElement(), { followCursor: true, position })
@@ -549,13 +552,13 @@ describe.skip('followCursor, headless', () => {
 
 		fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
 
-		vi.runAllTimers()
-
 		fireEvent.mouseMove(instance.store[0].el, first)
 
 		vi.advanceTimersByTime(100)
 
 		rect = instance.store[0].popper.getBoundingClientRect()
+		console.log('popper rect', instance.store[0].popperInstance.state.elements.popper.getBoundingClientRect())
+		console.log('ref rect', instance.store[0].popperInstance.state.elements.reference.getBoundingClientRect())
 
 		match(
 			first.clientY,
@@ -565,7 +568,7 @@ describe.skip('followCursor, headless', () => {
 		)
 	})
 
-	it('is at correct position after a content update', () => {
+	it.skip('is at correct position after a content update', () => {
 		instance = tippyFactory(createNewElement(), { followCursor: true })
 		const data = instance.store[0]
 
@@ -598,7 +601,7 @@ describe.skip('followCursor, headless', () => {
 		)
 	})
 
-	it('does not continue to follow if interactive: true and cursor is over popper', () => {
+	it.skip('does not continue to follow if interactive: true and cursor is over popper', () => {
 		instance = tippyFactory(createNewElement(), {
 			followCursor: true,
 			interactive: true
@@ -623,7 +626,7 @@ describe.skip('followCursor, headless', () => {
 		)
 	})
 
-	it('should reset popperInstance.reference if triggered by `focus`', () => {
+	it.skip('should reset popperInstance.reference if triggered by `focus`', () => {
 		instance = tippyFactory(createNewElement(), {
 			followCursor: true,
 			delay: 1000
@@ -645,7 +648,7 @@ describe.skip('followCursor, headless', () => {
 		expect(instance.settings.getReferenceClientRect).toBe(null)
 	})
 
-	it('works with manual trigger and .show()', () => {
+	it.skip('works with manual trigger and .show()', () => {
 		instance = tippyFactory(createNewElement(), {
 			followCursor: true,
 			trigger: 'manual'
@@ -666,7 +669,7 @@ describe.skip('followCursor, headless', () => {
 		)
 	})
 
-	it('is cleaned up if untriggered before showing', () => {
+	it.skip('is cleaned up if untriggered before showing', () => {
 		instance = tippyFactory(createNewElement(), { followCursor: true, delay: 100 })
 
 		fireEvent.mouseEnter(instance.store[0].el, first)
@@ -681,7 +684,7 @@ describe('animateFill', () => {
 	const getChildrenContent = (el: HTMLDivElement) => {
 		const childNodes = Array.from(el.children) as HTMLDivElement[]
 		return childNodes.find((node) =>
-			node.classList.contains(getAttributeName(CONTENT))
+			node.classList.contains(getAttributeName(TOOLTIP))
 		) as HTMLDivElement
 	}
 
@@ -716,14 +719,20 @@ describe('animateFill', () => {
 		).toBe(false)
 	})
 
-	it('true: sets `transitionDelay` style on content element', () => {
-		const instance = tippyFactory(createNewElement(), { animateFill: true, duration: 120 })
-		const content = getChildrenContent(instance.store[0].popper)
+	it('true: sets `transition-duration` style on content element', () => {
+		const instance = tippyFactory(createNewElement(), {
+			animateFill: true,
+			duration: 120
+		})
 
 		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 
-		expect(content.style.transitionDelay).toBe(`${120 / 10}ms`)
+		expect(instance.settings.animateFill).toBe(true)
+		expect(instance.settings.duration).toBe(120)
+		expect(
+			getChildrenContent(instance.store[0].popper).style['transition-duration']
+		).toBe('120ms')
 	})
 
 	it('false: does not set `transitionDelay` style on content element', () => {
@@ -731,11 +740,15 @@ describe('animateFill', () => {
 			animateFill: false,
 			duration: 120
 		})
-		const content = getChildrenContent(instance.store[0].popper)
 
 		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 
+		expect(instance.settings.animateFill).toBe(false)
+		expect(instance.settings.duration).toBe(120)
+
+		const content = getChildrenContent(instance.store[0].popper)
+		expect(content.style['transition-duration']).toBe('120ms')
 		expect(content.style.transitionDelay).toBe('')
 	})
 

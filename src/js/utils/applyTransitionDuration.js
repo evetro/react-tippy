@@ -8,13 +8,13 @@ import { CONTENT } from '../../selectors.ts'
 * @param {Number} duration
 */
 export default function applyTransitionDuration(els, duration) {
-  els.forEach(el => {
+  els.forEach((el) => {
     if (!el) return
 
     const isContent = matches.call(el, CONTENT)
 
     const _duration = isContent
-      ? Math.round(duration/1.3)
+      ? Math.round(duration / 1.3)
       : duration
 
     el.style[prefix('transitionDuration')] = _duration + 'ms'

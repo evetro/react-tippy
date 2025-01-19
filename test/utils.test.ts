@@ -1,5 +1,17 @@
-import { getAttributeName, getCorePlacement, getArrayOfElements } from '@package/utils'
-import { POPPER, TOOLTIP, CONTENT, CONTROLLER, TOOLTIPPED_EL, ARROW, CIRCLE } from '@package/selectors'
+import {
+	ARROW,
+	CIRCLE,
+	CONTENT,
+	CONTROLLER,
+	POPPER,
+	TOOLTIP,
+	TOOLTIPPED_EL
+} from '@package/selectors'
+import {
+	getArrayOfElements,
+	getAttributeName,
+	getCorePlacement
+} from '@package/utils'
 
 import createNewElement from './createNewElement'
 

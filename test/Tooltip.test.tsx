@@ -1,24 +1,34 @@
 import React, { useEffect } from 'react'
-import Tippy from '../src/component'
 import { render, screen, waitFor } from '@testing-library/react'
+import Tippy from '@package/component'
+import { Store } from '@package/js/core/globals'
+import isVisible from '@package/js/utils/isVisible.js'
+
+const getData = (ref: Element) => (
+	Store.find(({ popper }) => ref === popper)
+)
+
+const getTitle = (ref: Element) => (
+	getData(ref).el.getAttribute('title')
+)
 
 describe('<Tippy />', () => {
 	it('renders only the child element', () => {
-		const stringContent = render(
+		const test = render(
 			<Tippy title="tooltip">
 				<button />
 			</Tippy>
 		)
 
-		expect(stringContent.container.innerHTML).toBe('<button></button>')
+		expect(test.container.innerHTML).toBe('<button></button>')
 
-		const reactElementContent = render(
+		const test2 = render(
 			<Tippy html={<div>tooltip</div>}>
 				<button />
 			</Tippy>
 		)
 
-		expect(reactElementContent.container.innerHTML).toBe(
+		expect(test2.container.innerHTML).toBe(
 			'<button></button>'
 		)
 	})
@@ -137,7 +147,7 @@ describe('<Tippy />', () => {
 	})
 
 	it('refs are preserved on the child', async () => {
-		const test = new Promise((resolve) => {
+		const testCallback = new Promise((resolve) => {
 			const App = () => {
 				const refObject = React.createRef<HTMLButtonElement>()
 				let callbackRef: HTMLButtonElement
@@ -167,7 +177,7 @@ describe('<Tippy />', () => {
 
 			render(<App />)
 		})
-		await test
+		await testCallback
 	})
 
 	it('nesting', () => {
@@ -220,5 +230,188 @@ describe('<Tippy />', () => {
 				'mode (`open` prop)'
 			].join(' ')
 		)
+	})
+
+	it('adds a tippy instance to the child node', () => {
+		const { getByRole, queryAllByTitle } = render(
+			<Tippy title="Tooltip R">
+				<button />
+			</Tippy>
+		)
+
+		expect(queryAllByTitle('Tooltip R').length).toBe(1)
+		expect(getTitle(getByRole('tooltip'))).toBe('Tooltip R')
+		expect(isVisible(getByRole('tooltip'))).toBe(true)
+	})
+
+	it('if "open" prop is set to `false`, the tooltip element should be hidden', () => {
+		const { getByRole, queryAllByTitle, rerender } = render(
+			<Tippy title="Tooltip Q" open={false}>
+				<button />
+			</Tippy>
+		)
+
+		expect(queryAllByTitle('Tooltip P').length).toBe(0)
+		expect(queryAllByTitle('Tooltip Q').length).toBe(1)
+		expect(isVisible(getByRole('tooltip'))).toBe(false)
+
+		rerender(
+			<Tippy title="Tooltip P" open={true}>
+				<button />
+			</Tippy>
+		)
+
+		expect(queryAllByTitle('Tooltip P').length).toBe(1)
+		expect(queryAllByTitle('Tooltip Q').length).toBe(0)
+		expect(isVisible(getByRole('tooltip'))).toBe(true)
+	})
+
+	it('if "open" is set, then "hideOnClick" is false by default', () => {
+		const { rerender, getByRole, queryAllByTitle } = render(
+			<Tippy title="Tooltip O" open={true}>
+				<button />
+			</Tippy>
+		)
+
+		vi.runAllTimers()
+
+		expect(getData(getByRole('tooltip')).settings.hideOnClick).toBe(false)
+
+		rerender(
+			<Tippy title="Tooltip N" open={false}>
+				<button />
+			</Tippy>
+		)
+
+		expect(getData(getByRole('tooltip')).settings.hideOnClick).toBe(false)
+
+		rerender(
+			<Tippy title="Tooltip M" open={false} hideOnClick={true}>
+				<button />
+			</Tippy>
+		)
+
+		expect(getData(getByRole('tooltip')).settings.hideOnClick).toBe(false)
+
+		rerender(
+			<Tippy title="Tooltip L" hideOnClick="persistent">
+				<button />
+			</Tippy>
+		)
+
+		expect(
+			getData(getByRole('tooltip')).settings.hideOnClick
+		).toBe('persistent')
+	})
+
+	it('if "open" is initially set to `true`', () => {
+		const { rerender, getByRole, queryAllByTitle } = render(
+			<Tippy title="Tooltip K" open={true}>
+				<button />
+			</Tippy>
+		)
+
+		expect(isVisible(getByRole('tooltip'))).toBe(true)
+
+		rerender(
+			<Tippy title="Tooltip J" open={false}>
+				<button />
+			</Tippy>
+		)
+
+		expect(isVisible(getByRole('tooltip'))).toBe(false)
+	})
+
+	it('if "disabled" is initially set to `true`', () => {
+		const { rerender, getByRole, queryAllByRole } = render(
+			<Tippy title="Tooltip I" disabled={true}>
+				<button />
+			</Tippy>
+		)
+
+		expect(queryAllByRole('tooltip').length).toBe(0)
+
+		rerender(
+			<Tippy title="Tooltip H" disabled={false}>
+				<button />
+			</Tippy>
+		)
+
+		expect(getData(getByRole('tooltip')).settings.disabled).toBe(false)
+	})
+
+	it('renders react element content inside the content prop', () => {
+		const { getByRole } = render(
+			<Tippy html={<strong>Tooltip G</strong>}>
+				<button />
+			</Tippy>
+		)
+
+		expect(getByRole('tooltip').querySelector('strong')).not.toBeNull()
+	})
+
+	it('if "disabled" is initially set to `false`', () => {
+		const { rerender, getByRole, queryAllByRole } = render(
+			<Tippy title="Tooltip F" disabled={false}>
+				<button />
+			</Tippy>
+		)
+
+		expect(queryAllByRole('tooltip').length).toBe(1)
+		expect(getData(getByRole('tooltip')).settings.disabled).toBe(false)
+
+		rerender(
+			<Tippy title="Tooltip E" disabled={true}>
+				<button />
+			</Tippy>
+		)
+
+		expect(queryAllByRole('tooltip').length).toBe(0)
+		expect(getData(getByRole('tooltip')).settings.disabled).toBe(true)
+	})
+
+	it('unmount destroys the tippy instance and allows garbage collection', () => {
+		const { container, unmount, getByRole, queryAllByTitle } = render(
+			<Tippy title="Tooltip D">
+				<button />
+			</Tippy>
+		)
+
+		unmount()
+
+		expect(queryAllByRole('tooltip').length).toBe(0)
+		expect(container.querySelector('button')).toBe(undefined)
+	})
+
+	it('updating props updates the tippy instance', () => {
+		const { rerender, getByRole, queryAllByTitle } = render(
+			<Tippy title="Tooltip C">
+				<button />
+			</Tippy>
+		)
+
+		expect(getData(getByRole('tooltip')).settings.arrow).toBe(false)
+		expect(getTitle(getByRole('tooltip'))).toBe('Tooltip C')
+
+		rerender(
+			<Tippy title="Tooltip B" arrow>
+				<button />
+			</Tippy>
+		)
+
+		expect(getData(getByRole('tooltip')).settings.arrow).toBe(true)
+		expect(getTitle(getByRole('tooltip'))).toBe('Tooltip B')
+	})
+
+	it('component as a child', () => {
+		const Child = React.forwardRef<HTMLButtonElement>((_, ref) => <button ref={ref} />)
+
+		const { rerender, getByRole, queryAllByTitle } = render(
+			<Tippy title="Tooltip A">
+				<Child />
+			</Tippy>
+		)
+
+		expect(getTitle(getByRole('tooltip'))).toBe('Tooltip A')
 	})
 })

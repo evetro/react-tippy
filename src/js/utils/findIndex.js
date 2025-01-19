@@ -1,7 +1,7 @@
 import find from './find'
 
 /**
-* Ponyfill for Array.prototype.findIndex
+* Polyfill for Array.prototype.findIndex
 * @param {Array} arr
 * @param {Function} checkFn
 * @return index of the item in the array

@@ -1,5 +1,5 @@
 /**
-* Ponyfill for Array.prototype.find
+* Polyfill for Array.prototype.find
 * @param {Array} arr
 * @param {Function} checkFn
 * @return item in the array

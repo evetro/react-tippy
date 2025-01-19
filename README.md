@@ -212,6 +212,10 @@ const [open, setOpen] = useState(false)
 
 ## Browser support
 
+TODO: Investigate browser support compability further.
+
+**NB: This package does not support Internet Explorer or Opera Mini, nor does it support any browser version which has no implementation for the array methods `Array.prototype.find` and `Array.prototype.findIndex`.** In short, if your web browser version is fairly recent (before 01/01/2017 to give one concrete example), you should have no prototype issues.
+
 Tippy gracefully degrades on older browsers (and with JavaScript disabled) by using the browser's default title tooltip.
 
 If you want to support older browsers, please add `polyfill` by yourself.

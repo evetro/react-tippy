@@ -1,7 +1,7 @@
 import { matches } from './matches'
 
 /**
-* Ponyfill to get the closest parent element
+* Polyfill to get the closest parent element
 * @param {Element} element - child of parent to be returned
 * @param {String} parentSelector - selector to match the parent if found
 * @return {Element}

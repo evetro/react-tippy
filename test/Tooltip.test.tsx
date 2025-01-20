@@ -267,7 +267,7 @@ describe('<Tippy />', () => {
 	})
 
 	it('if "open" is set, then "hideOnClick" is false by default', () => {
-		const { rerender, getByRole, queryAllByTitle } = render(
+		const { rerender, getByRole } = render(
 			<Tippy title="Tooltip O" open={true}>
 				<button />
 			</Tippy>
@@ -305,7 +305,7 @@ describe('<Tippy />', () => {
 	})
 
 	it('if "open" is initially set to `true`', () => {
-		const { rerender, getByRole, queryAllByTitle } = render(
+		const { rerender, getByRole } = render(
 			<Tippy title="Tooltip K" open={true}>
 				<button />
 			</Tippy>
@@ -371,7 +371,7 @@ describe('<Tippy />', () => {
 	})
 
 	it('unmount destroys the tippy instance and allows garbage collection', () => {
-		const { container, unmount, getByRole, queryAllByTitle } = render(
+		const { container, unmount, queryAllByRole } = render(
 			<Tippy title="Tooltip D">
 				<button />
 			</Tippy>
@@ -384,7 +384,7 @@ describe('<Tippy />', () => {
 	})
 
 	it('updating props updates the tippy instance', () => {
-		const { rerender, getByRole, queryAllByTitle } = render(
+		const { rerender, getByRole } = render(
 			<Tippy title="Tooltip C">
 				<button />
 			</Tippy>
@@ -406,7 +406,7 @@ describe('<Tippy />', () => {
 	it('component as a child', () => {
 		const Child = React.forwardRef<HTMLButtonElement>((_, ref) => <button ref={ref} />)
 
-		const { rerender, getByRole, queryAllByTitle } = render(
+		const { getByRole } = render(
 			<Tippy title="Tooltip A">
 				<Child />
 			</Tippy>

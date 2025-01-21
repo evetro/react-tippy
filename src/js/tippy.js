@@ -31,8 +31,6 @@ import evaluateSettings from './core/evaluateSettings'
 */
 export default class Tippy {
   constructor(selector, settings = {}) {
-    /** @todo write tests with vitest and jsdom (for faking DOM) */
-    /** @todo factory function in TS at the top level for defining parameter types */
     this.callbacks = {}
     this.settings = {}
     if (Browser.SUPPORTED) {
@@ -55,7 +53,6 @@ export default class Tippy {
       this.store = createTooltips.call(this, getArrayOfElements(selector))
       Store.push.apply(Store, this.store)
     } else {
-      // Use default browser tooltip on unsupported browsers
       this.destroyed = true
       this.store = []
     }

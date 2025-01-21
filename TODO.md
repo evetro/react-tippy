@@ -44,3 +44,7 @@ version 2.
  - [x] [91 Update doc for tooltip custom theme](https://github.com/tvkhoa/react-tippy/pull/91/files)
  - [x] [90 Set and remove element aria-describedby base on popper](https://github.com/tvkhoa/react-tippy/pull/90)
  - [x] [87 Fix transitions (especially on manual triggering)](https://github.com/tvkhoa/react-tippy/pull/87)
+
+## `followCursor` option: use virtual element on Popper instead of translate#d styling edits
+
+The virtual element will be the new parameter for the popper constructor. The `selector` in the class constructor here will then become the DOM context (this will work, trust). Though will it work for touch events? Guide: https://popper.js.org/docs/v2/virtual-elements/#usage

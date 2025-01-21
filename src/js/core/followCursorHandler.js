@@ -20,7 +20,7 @@ export default function followCursorHandler(e) {
   } = refData
 
   const position = getCorePlacement(
-    popper.getAttribute('data-popper-placement') || 'top' // workaround for testing
+    popper.getAttribute('data-popper-placement') || 'top'
   )
   const halfPopperWidth = Math.round(popper.offsetWidth / 2)
   const halfPopperHeight = Math.round(popper.offsetHeight / 2)
@@ -46,7 +46,7 @@ export default function followCursorHandler(e) {
       break
     case 'bottom':
       x = pageX - halfPopperWidth + dx
-      y = pageY + halfPopperHeight/1.5
+      y = pageY + halfPopperHeight / 1.5
       break
   }
 
@@ -56,7 +56,7 @@ export default function followCursorHandler(e) {
   // Prevent left/right overflow
   if (position === 'top' || position === 'bottom') {
     if (isRightOverflowing) {
-      x = pageWidth - viewportPadding - ( 2 * halfPopperWidth)
+      x = pageWidth - viewportPadding - (2 * halfPopperWidth)
     }
 
     if (isLeftOverflowing) {

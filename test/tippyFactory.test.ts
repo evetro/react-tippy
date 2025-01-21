@@ -421,9 +421,6 @@ describe('show and hide', () => {
 })
 
 
-//
-// TODO check followCursor tests in tippyjs
-//
 describe.only('followCursor, headless', () => {
 	// NOTE: the simulated window dimensions are 1024 x 768. These values
 	// should be within that
@@ -594,6 +591,7 @@ describe.only('followCursor, headless', () => {
 		fireEvent.mouseMove(document, first)
 
 		rect = instance.store[0].el.getBoundingClientRect()
+		// TODO new instance method for getting bounding client rect on a popper element
 
 		match(
 			first.clientY,

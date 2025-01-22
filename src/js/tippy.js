@@ -168,19 +168,10 @@ export default class Tippy {
         followCursor,
         flipDuration,
         duration,
-        dynamicTitle
       }
     } = data
 
     renderVirtualDom?.(popper)
-
-    if (dynamicTitle) {
-      const title = el.getAttribute('title')
-      if (title) {
-        content.innerHTML = title
-        removeTitle(el)
-      }
-    }
 
     const _duration = customDuration !== undefined
       ? customDuration

@@ -30,7 +30,6 @@ export default Object.freeze({
 	appendTo: () => document.body,
 	zIndex: 9999,
 	touchHold: false,
-	dynamicTitle: false,
 	flipModifierOptions: undefined,
 	open: undefined,
 	onRequestClose: () => {},

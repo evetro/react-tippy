@@ -108,7 +108,7 @@ const HeaderWithTooltip = withTooltip(Header, {
 |onRequestClose|`() => {}`|Function|Use it only if you want to `show/hide it manually`. This event is fired when you click outside of your tooltip, should be used with the prop `interaction` to keep your tooltip showing|
 |onShow|`() => {}`|function|Callback when the tooltip has been triggered and has started to transition in|
 |onShown|`() => {}`|function|Callback when the tooltip has fully transitioned in and is showing|
-|open|`undefined`|`true` `false`|Use it only if you want to `show/hide it manually`. Usually, you don't need it|
+|open|`undefined`|`undefined` | `true` `false`|Use it only if you want to `show/hide it manually`. Usually, you don't need it|
 |position|`top`|`top` `bottom` `left` `right`|Specifies which direction to position the tooltip on the element. Add the suffix `-start` or `-end` to shift the position. `top-end` is one such example.|
 |size|`regular`|`small` `regular` `big`|Specifies how big the tooltip is.|
 |sticky|`false`|`true` `false`|Specifies whether the tooltip should stick to its element reference when it's showing (for example, if the element is animated/moves).|

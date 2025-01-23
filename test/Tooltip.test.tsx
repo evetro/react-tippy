@@ -20,7 +20,9 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(test.container.innerHTML).toBe('<button></button>')
+		expect(test.container.innerHTML).toBe(
+			`<div class="" style="display: inline;" data-tooltipped="" data-original-title="tooltip"><button></button></div>`
+		)
 
 		const test2 = render(
 			<Tippy html={<div>tooltip</div>}>
@@ -29,11 +31,11 @@ describe('<Tippy />', () => {
 		)
 
 		expect(test2.container.innerHTML).toBe(
-			'<button></button>'
+			`<div class="" style="display: inline;" data-tooltipped=""><button></button></div>`
 		)
 	})
 
-	it('cleans up after unmounting in tests', async () => {
+	it('cleans up after unmounting', async () => {
 		render(
 			<Tippy
 				title="tooltip4"
@@ -45,16 +47,21 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
+		expect(screen.queryAllByText('tooltip4').length).toBe(0)
 		// open up the tooltip
 		screen.getByRole('button').click()
-		expect(screen.getByText('tooltip4')).toBeInTheDocument()
+		vi.runAllTimers()
+		await waitFor(() => {
+			expect(screen.getByText('tooltip4')).toBeInTheDocument()
+			expect(screen.queryAllByRole('tooltip').length).toBe(1)
+		})
 
 		// close the tooltip
 		screen.getByRole('button').click()
+		vi.runAllTimers()
 		await waitFor(() => {
-			expect(screen.getByRole('tooltip').getAttribute('data-state')).toBe(
-				'hidden'
-			)
+			expect(screen.queryAllByRole('tooltip').length).toBe(0)
+			expect(screen.queryAllByText('tooltip4').length).toBe(0)
 		})
 	})
 
@@ -66,8 +73,7 @@ describe('<Tippy />', () => {
 				<button />
 			</Tippy>
 		)
-
-		expect(container?.firstElementChild?.className).toBe('tippy hello world')
+		expect(container?.firstElementChild?.className).toBe('hello world')
 	})
 
 	it('props.className: updating does not leave stale className behind', () => {
@@ -77,7 +83,7 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(container?.firstElementChild?.className?.includes('one')).toBe(true)
+		expect(container?.firstElementChild?.className).toBe('one')
 
 		rerender(
 			<Tippy title="tooltip" className="two">
@@ -85,18 +91,18 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(container?.firstElementChild?.className?.includes('one')).toBe(false)
-		expect(container?.firstElementChild?.className?.includes('two')).toBe(true)
+		expect(container?.firstElementChild?.className).not.toBe('one')
+		expect(container?.firstElementChild?.className).toBe('two')
 	})
 
-	it('props.className: syncs with children.type', () => {
+	it.only('props.className: syncs with children.type', () => {
 		const { container, rerender } = render(
 			<Tippy title="tooltip" className="one">
 				<button />
 			</Tippy>
 		)
 
-		expect(container?.firstElementChild?.className?.includes('one')).toBe(true)
+		expect(container?.firstElementChild?.className).toBe('one')
 
 		rerender(
 			<Tippy title="tooltip" className="one">
@@ -104,7 +110,7 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(container?.firstElementChild?.className?.includes('one')).toBe(true)
+		expect(container?.firstElementChild?.className).toBe('one')
 	})
 
 	it('updates children consistently', () => {

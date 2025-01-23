@@ -33,7 +33,7 @@ const defaultProps = {
   onRequestClose: () => {},
   onShow: () => {},
   onShown: () => {},
-  open: false,
+  open: undefined,
   flipModifierOptions: undefined,
   position: 'top',
   size: 'regular',
@@ -285,7 +285,7 @@ class Tooltip extends React.Component {
           this.tooltipDOM = tooltip
         }}
         title={this.props.title}
-        className={this.props.className}
+        className={this.props.className.trim()}
         tabIndex={this.props.tabIndex}
         style={{ display: 'inline', ...this.props.style }}
       >

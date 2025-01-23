@@ -133,7 +133,7 @@ export default class Tippy {
     data.settings = evaluateSettings(newSettings);
 
     const i = this.store.findIndex(d => d.popper === popper)
-    if (i >= 0 && name !== 'disabled') {
+    if (i >= 0 && name !== 'disabled' && name !== 'open') {
       this.destroy(popper)
       Object.assign(this.settings, data.settings)
       const [tooltip] = createTooltips.call(this, [data.el])

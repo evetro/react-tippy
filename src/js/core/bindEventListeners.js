@@ -53,15 +53,21 @@ export default function bindEventListeners() {
 
     if (popper) {
       const data = find(Store, d => d.popper === popper)
-      if (!data) return;
+      if (!data) {
+        return
+      }
 
       const { settings: { interactive } } = data
-      if (interactive) return
+      if (interactive) {
+        return
+      }
     }
 
     if (el) {
       const data = find(Store, d => d.el === el)
-      if (!data) return;
+      if (!data) {
+        return
+      }
 
       const {
         settings: {
@@ -79,11 +85,15 @@ export default function bindEventListeners() {
       }
 
       // If hideOnClick is not strictly true or triggered by a click don't hide poppers
-      if (hideOnClick !== true || trigger.indexOf('click') !== -1) return
+      if (hideOnClick !== true || trigger.indexOf('click') !== -1) {
+        return
+      }
     }
 
     // Don't trigger a hide for tippy controllers, and don't needlessly run loop
-    if (closest(event.target, CONTROLLER) || !document.querySelector(POPPER)) return
+    if (closest(event.target, CONTROLLER) || !document.querySelector(POPPER)) {
+      return
+    }
 
     hideAllPoppers()
   }

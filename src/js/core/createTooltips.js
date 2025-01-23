@@ -17,11 +17,11 @@ export default function createTooltips(els) {
   const { trigger, touchHold, useVirtualDom } = settings
 
   const cb = (store, el) => {
-    const id = ++global_id
-
     const title = el.getAttribute('title')
-    if (!title && !useVirtualDom) return store
-
+    if (!title && !useVirtualDom) {
+      return store
+    }
+    const id = ++global_id
     el.setAttribute('data-tooltipped', '')
     removeTitle(el)
 

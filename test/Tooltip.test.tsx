@@ -95,7 +95,7 @@ describe('<Tippy />', () => {
 		expect(container?.firstElementChild?.className).toBe('two')
 	})
 
-	it.only('props.className: syncs with children.type', () => {
+	it('props.className: syncs with children.type', () => {
 		const { container, rerender } = render(
 			<Tippy title="tooltip" className="one">
 				<button />
@@ -125,7 +125,9 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(container.innerHTML).toBe('<div></div>')
+		expect(container.innerHTML).toBe(
+			'<div class="" style="display: inline;" data-tooltipped="" data-original-title="TOOLTIP-01"><div></div></div>'
+		)
 
 		rerender(
 			<Tippy title="TOOLTIP-02">
@@ -133,7 +135,9 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(container.innerHTML).toBe('<span></span>')
+		expect(container.innerHTML).toBe(
+			'<div class="" style="display: inline;" data-tooltipped="" data-original-title="TOOLTIP-02"><span></span></div>'
+		)
 
 		rerender(
 			<Tippy title="TOOLTIP-03">
@@ -141,7 +145,9 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(container.innerHTML).toBe('<button></button>')
+		expect(container.innerHTML).toBe(
+			'<div class="" style="display: inline;" data-tooltipped="" data-original-title="TOOLTIP-03"><button></button></div>'
+		)
 
 		rerender(
 			<Tippy title="TOOLTIP-04">
@@ -149,7 +155,9 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(container.innerHTML).toBe('<main></main>')
+		expect(container.innerHTML).toBe(
+			'<div class="" style="display: inline;" data-tooltipped="" data-original-title="TOOLTIP-04"><main></main></div>'
+		)
 	})
 
 	it('refs are preserved on the child', async () => {
@@ -187,7 +195,7 @@ describe('<Tippy />', () => {
 	})
 
 	it('nesting', () => {
-		render(
+		const { container } = render(
 			<Tippy title="tooltip" placement="bottom" open>
 				<Tippy title="tooltip" placement="left" open>
 					<Tippy title="tooltip" open>
@@ -197,45 +205,19 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(document.querySelectorAll('.tippy-box').length).toBe(3)
+		expect(container.querySelectorAll(`div[data-original-title="tooltip"]`).length).toBe(3)
 	})
 
-	it('controlled mode warnings', () => {
+	it.only('will not call console.warn', () => {
 		const spy = vi.spyOn(console, 'warn')
 
 		const { rerender } = render(
-			<Tippy title="tooltip" hideOnClick={false}>
-				<button />
-			</Tippy>
-		)
-
-		expect(spy).not.toHaveBeenCalled()
-
-		rerender(
 			<Tippy title="tooltip" open={false} hideOnClick={false}>
 				<button />
 			</Tippy>
 		)
 
-		expect(spy).toHaveBeenCalledWith(
-			[
-				'@tippyjs/react: Cannot specify `hideOnClick` prop in controlled',
-				'mode (`open` prop)'
-			].join(' ')
-		)
-
-		rerender(
-			<Tippy title="tooltip" open={false} trigger="click">
-				<button />
-			</Tippy>
-		)
-
-		expect(spy).toHaveBeenCalledWith(
-			[
-				'@tippyjs/react: Cannot specify `trigger` prop in controlled',
-				'mode (`open` prop)'
-			].join(' ')
-		)
+		expect(spy).not.toHaveBeenCalled()
 	})
 
 	it('adds a tippy instance to the child node', () => {

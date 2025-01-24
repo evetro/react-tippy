@@ -2,7 +2,6 @@ import defaultProps from '@package/defaults.ts'
 import { Store } from '@package/js/core/globals.js'
 import isVisible from '@package/js/utils/isVisible.js'
 import { TOOLTIP } from '@package/selectors'
-import { Position } from '@package/types'
 import { getAttributeName } from '@package/utils'
 import { fireEvent } from '@testing-library/dom'
 

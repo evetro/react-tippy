@@ -208,10 +208,10 @@ describe('<Tippy />', () => {
 		expect(container.querySelectorAll(`div[data-original-title="tooltip"]`).length).toBe(3)
 	})
 
-	it.only('will not call console.warn', () => {
+	it('will not call console.warn', () => {
 		const spy = vi.spyOn(console, 'warn')
 
-		const { rerender } = render(
+		render(
 			<Tippy title="tooltip" open={false} hideOnClick={false}>
 				<button />
 			</Tippy>
@@ -220,27 +220,28 @@ describe('<Tippy />', () => {
 		expect(spy).not.toHaveBeenCalled()
 	})
 
-	it('adds a tippy instance to the child node', () => {
-		const { getByRole, queryAllByTitle } = render(
-			<Tippy title="Tooltip R">
+	it.only('adds a tippy instance to the child node', () => {
+		const { getByRole, queryAllByText } = render(
+			<Tippy title="Tooltip R" open>
 				<button />
 			</Tippy>
 		)
+		vi.runAllTimers()
 
-		expect(queryAllByTitle('Tooltip R').length).toBe(1)
+		expect(queryAllByText('Tooltip R').length).toBe(1)
 		expect(getTitle(getByRole('tooltip'))).toBe('Tooltip R')
 		expect(isVisible(getByRole('tooltip'))).toBe(true)
 	})
 
 	it('if "open" prop is set to `false`, the tooltip element should be hidden', () => {
-		const { getByRole, queryAllByTitle, rerender } = render(
+		const { getByRole, queryAllByText, rerender } = render(
 			<Tippy title="Tooltip Q" open={false}>
 				<button />
 			</Tippy>
 		)
 
-		expect(queryAllByTitle('Tooltip P').length).toBe(0)
-		expect(queryAllByTitle('Tooltip Q').length).toBe(1)
+		expect(queryAllByText('Tooltip P').length).toBe(0)
+		expect(queryAllByText('Tooltip Q').length).toBe(1)
 		expect(isVisible(getByRole('tooltip'))).toBe(false)
 
 		rerender(
@@ -249,8 +250,8 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
-		expect(queryAllByTitle('Tooltip P').length).toBe(1)
-		expect(queryAllByTitle('Tooltip Q').length).toBe(0)
+		expect(queryAllByText('Tooltip P').length).toBe(1)
+		expect(queryAllByText('Tooltip Q').length).toBe(0)
 		expect(isVisible(getByRole('tooltip'))).toBe(true)
 	})
 

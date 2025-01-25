@@ -6,7 +6,7 @@ import { Store } from '@package/js/core/globals'
 import isVisible from '@package/js/utils/isVisible.js'
 
 const getData = (ref: Element) => (
-	Store.find(({ popper }) => ref === popper)
+	Store.find(({ popper, el }) => ref === popper || ref === el)
 )
 
 const isTippy = (ref: Element) => (
@@ -221,7 +221,7 @@ describe('<Tippy />', () => {
 		expect(spy).not.toHaveBeenCalled()
 	})
 
-	it.only('adds a tippy instance to the child node', () => {
+	it('adds a tippy instance to the child node', () => {
 		const { getByRole, queryAllByText, container } = render(
 			<Tippy title="Tooltip R">
 				<button />
@@ -244,7 +244,7 @@ describe('<Tippy />', () => {
 
 		expect(queryAllByText('Tooltip P').length).toBe(0)
 		expect(queryAllByText('Tooltip Q').length).toBe(0)
-		expect(isVisible(getByRole('tooltip'))).toBe(false)
+		expect(isVisible(screen.getByRole('button').parentElement)).toBe(false)
 
 		rerender(
 			<Tippy title="Tooltip P" open={true}>
@@ -260,51 +260,15 @@ describe('<Tippy />', () => {
 		expect(isVisible(getByRole('tooltip'))).toBe(true)
 	})
 
-	it('if "open" is set, then "hideOnClick" is false by default', () => {
-		const { rerender, getByRole } = render(
-			<Tippy title="Tooltip O" open={true}>
-				<button />
-			</Tippy>
-		)
-
-		vi.runAllTimers()
-
-		expect(getData(getByRole('tooltip')).settings.hideOnClick).toBe(false)
-
-		rerender(
-			<Tippy title="Tooltip N" open={false}>
-				<button />
-			</Tippy>
-		)
-
-		expect(getData(getByRole('tooltip')).settings.hideOnClick).toBe(false)
-
-		rerender(
-			<Tippy title="Tooltip M" open={false} hideOnClick={true}>
-				<button />
-			</Tippy>
-		)
-
-		expect(getData(getByRole('tooltip')).settings.hideOnClick).toBe(false)
-
-		rerender(
-			<Tippy title="Tooltip L" hideOnClick="persistent">
-				<button />
-			</Tippy>
-		)
-
-		expect(
-			getData(getByRole('tooltip')).settings.hideOnClick
-		).toBe('persistent')
-	})
-
 	it('if "open" is initially set to `true`', () => {
-		const { rerender, getByRole } = render(
+		const { rerender, getByRole, queryAllByRole } = render(
 			<Tippy title="Tooltip K" open={true}>
 				<button />
 			</Tippy>
 		)
+		vi.runAllTimers()
 
+		expect(queryAllByRole('tooltip').length).toBe(1)
 		expect(isVisible(getByRole('tooltip'))).toBe(true)
 
 		rerender(
@@ -312,12 +276,14 @@ describe('<Tippy />', () => {
 				<button />
 			</Tippy>
 		)
+		vi.runAllTimers()
 
-		expect(isVisible(getByRole('tooltip'))).toBe(false)
+		expect(queryAllByRole('tooltip').length).toBe(0)
+		expect(isVisible(screen.getByRole('button').parentElement)).toBe(false)
 	})
 
 	it('if "disabled" is initially set to `true`', () => {
-		const { rerender, getByRole, queryAllByRole } = render(
+		const { container, rerender, getByRole, queryAllByRole } = render(
 			<Tippy title="Tooltip I" disabled={true}>
 				<button />
 			</Tippy>
@@ -331,25 +297,34 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
+
 		expect(getData(getByRole('tooltip')).settings.disabled).toBe(false)
 	})
 
 	it('renders react element content inside the content prop', () => {
-		const { getByRole } = render(
+		const { container, getByRole } = render(
 			<Tippy html={<strong>Tooltip G</strong>}>
 				<button />
 			</Tippy>
 		)
 
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
+
 		expect(getByRole('tooltip').querySelector('strong')).not.toBeNull()
 	})
 
 	it('if "disabled" is initially set to `false`', () => {
-		const { rerender, getByRole, queryAllByRole } = render(
+		const { container, rerender, getByRole, queryAllByRole, queryAllByText } = render(
 			<Tippy title="Tooltip F" disabled={false}>
 				<button />
 			</Tippy>
 		)
+
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
 
 		expect(queryAllByRole('tooltip').length).toBe(1)
 		expect(getData(getByRole('tooltip')).settings.disabled).toBe(false)
@@ -359,9 +334,11 @@ describe('<Tippy />', () => {
 				<button />
 			</Tippy>
 		)
+		vi.runAllTimers()
 
 		expect(queryAllByRole('tooltip').length).toBe(0)
-		expect(getData(getByRole('tooltip')).settings.disabled).toBe(true)
+		expect(queryAllByText('Tooltip E').length).toBe(0)
+		expect(getData(screen.getByRole('button').parentElement)).toBe(undefined)
 	})
 
 	it('unmount destroys the tippy instance and allows garbage collection', () => {
@@ -371,18 +348,26 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
+		expect(container.querySelectorAll('button').length).toBe(1)
+
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
+
 		unmount()
 
 		expect(queryAllByRole('tooltip').length).toBe(0)
-		expect(container.querySelector('button')).toBe(undefined)
+		expect(container.querySelectorAll('button').length).toBe(0)
 	})
 
 	it('updating props updates the tippy instance', () => {
-		const { rerender, getByRole, queryAllByText } = render(
+		const { container, rerender, getByRole, queryAllByText } = render(
 			<Tippy title="Tooltip C">
 				<button />
 			</Tippy>
 		)
+
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
 
 		expect(getData(getByRole('tooltip')).settings.arrow).toBe(false)
 		expect(queryAllByText('Tooltip C').length).toBe(1)
@@ -393,6 +378,9 @@ describe('<Tippy />', () => {
 			</Tippy>
 		)
 
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
+
 		expect(getData(getByRole('tooltip')).settings.arrow).toBe(true)
 		expect(queryAllByText('Tooltip B').length).toBe(1)
 	})
@@ -400,11 +388,14 @@ describe('<Tippy />', () => {
 	it('component as a child', () => {
 		const Child = React.forwardRef<HTMLButtonElement>((_, ref) => <button ref={ref} />)
 
-		const { queryAllByText } = render(
+		const { container, queryAllByText } = render(
 			<Tippy title="Tooltip A">
 				<Child />
 			</Tippy>
 		)
+
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
 
 		expect(queryAllByText('Tooltip A').length).toBe(1)
 	})

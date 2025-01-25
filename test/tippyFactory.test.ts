@@ -2,11 +2,11 @@ import defaultProps from '@package/defaults.ts'
 import { Store } from '@package/js/core/globals.js'
 import isVisible from '@package/js/utils/isVisible.js'
 import { TOOLTIP } from '@package/selectors'
+import Tippy from '@package/js/tippy'
+import tippyFactory from "@package/tippyFactory"
 import { getAttributeName } from '@package/utils'
 import { fireEvent } from '@testing-library/dom'
 
-import tippyFactory from "../src/tippyFactory"
-import Tippy from '../src/js/tippy'
 import createNewElement from './createNewElement'
 
 let instance: Tippy | null | undefined

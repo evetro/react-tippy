@@ -8,11 +8,11 @@ export default function Example() {
 	const toDiv = (option: number) => {
 		const isActive = option === value
 		const key = `${option}`
-		console.log(`Rendering ${key}, isActive: ${isActive}`)
+		// console.log(`Rendering ${key}, isActive: ${isActive}`)
 		const onClick = () => { setValue(option) }
 		return (
 			<div key={key} onClick={onClick}>
-				{option} – {isActive ? "Active" : "Not Active"}
+				{option}: {isActive ? "      is active" : " is not active"}
 			</div>
 		)
 	}

@@ -9,7 +9,7 @@ export default function Menu({ selected, children }: { selected: number, childre
 	const toggle = () => { setVisible(flag => !flag) }
 
 	const onRequestClose = () => {
-		console.log('manual PopoverContent CLOSE triggered')
+		console.log('Manual PopoverContent Close Event Triggered')
 		hide()
 	}
 
@@ -26,7 +26,7 @@ export default function Menu({ selected, children }: { selected: number, childre
 				content={PopoverContent}
 				onRequestClose={onRequestClose}
 			>
-				<button onClick={toggle}>{selected}</button>
+				<button onClick={toggle}>Selected number: {selected}</button>
 			</ManualPopover>
 			<>{children}</>
 		</div>

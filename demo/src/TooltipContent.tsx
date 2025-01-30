@@ -1,10 +1,6 @@
-import { useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 
-import { useAppStore } from '../appState'
-
-export default function TooltipContent() {
-	const [content] = useAppStore()
-
+export default function TooltipContent({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		console.log('TooltipContent Mount')
 		return () => {
@@ -12,9 +8,5 @@ export default function TooltipContent() {
 		}
 	}, [])
 
-	return (
-		<div>
-			TooltipContent here {content}
-		</div>
-	)
+	return <>{children}</>
 }

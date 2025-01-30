@@ -34,6 +34,13 @@ export default defineConfig({
 		}
 	},
 	test: {
+		coverage: {
+			provider: 'v8',
+			enabled: true,
+			reporter: 'html',
+			include: ['src/**'],
+			reportOnFailure: true
+		},
 		include: ['test/**/*.test.ts?(x)'],
 		snapshotFormat: {
 			printBasicPrototype: true

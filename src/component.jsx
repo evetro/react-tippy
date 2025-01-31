@@ -54,10 +54,6 @@ const banned =  ['disabled', 'open', 'html', 'reactDOM', 'children', 'className'
 const outBannedKeys = (key) => !banned.includes(key);
 const propKeys = Object.keys(defaultProps).filter(outBannedKeys);
 
-const noBrowser = () => (
-  typeof window === 'undefined' || typeof document === 'undefined'
-)
-
 class Tooltip extends React.Component {
   constructor(props) {
     super(props);
@@ -73,24 +69,14 @@ class Tooltip extends React.Component {
   }
 
   componentDidMount() {
-    if (noBrowser()) {
-      return;
-    }
     this.initTippy();
   }
 
   componentWillUnmount() {
-    if (noBrowser()) {
-      return;
-    }
     this.destroyTippy();
   }
 
   componentDidUpdate(prevProps) {
-    if (noBrowser()) {
-      return;
-    }
-
     if (this.props.disabled === false && prevProps.disabled === true) {
       this.updateSettings('disabled', false);
       this.destroyTippy();
@@ -135,9 +121,6 @@ class Tooltip extends React.Component {
   }
 
   _showTooltip() {
-    if (noBrowser()) {
-      return;
-    }
     if (this.tippy) {
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
       setTimeout(() => this.tippy.show(popper, this.props.duration), 0);
@@ -145,9 +128,6 @@ class Tooltip extends React.Component {
   }
 
   _hideTooltip() {
-    if (noBrowser()) {
-      return;
-    }
     if (this.tippy) {
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
       setTimeout(() => { this.tippy.hide(popper, this.props.hideDuration); }, 0);
@@ -155,9 +135,6 @@ class Tooltip extends React.Component {
   }
 
   _updateSettings(name, value) {
-    if (noBrowser()) {
-      return;
-    }
     if (this.tippy) {
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
       this.tippy.updateSettings(popper, name, value);
@@ -165,9 +142,6 @@ class Tooltip extends React.Component {
   }
 
   _updateReactDom() {
-    if (noBrowser()) {
-      return;
-    }
     if (this.tippy) {
       this.updateSettings('reactDOM', this.props.html);
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
@@ -196,9 +170,6 @@ class Tooltip extends React.Component {
   }
 
   _updateTippy() {
-    if (noBrowser()) {
-      return;
-    }
     if (this.tippy) {
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
       this.tippy.update(popper);
@@ -206,7 +177,7 @@ class Tooltip extends React.Component {
   }
 
   _initTippy() {
-      if (noBrowser() || !Browser.SUPPORTED) {
+      if (!Browser.SUPPORTED) {
       return;
     }
     if (!this.props.disabled) {
@@ -265,9 +236,6 @@ class Tooltip extends React.Component {
   }
 
   _destroyTippy() {
-    if (noBrowser()) {
-      return;
-    }
     if (this.tippy) {
       const popper = this.tippy.getPopperElement(this.tooltipDOM);
       this.updateSettings('open', false);

@@ -164,7 +164,7 @@ export default class Tippy {
     this.callbacks.show?.call?.(popper)
 
     if (data.settings && data.settings.open === false) {
-      return;
+      return
     }
 
     const {

@@ -1,6 +1,6 @@
 import { Store } from './globals'
 
-import getCorePlacement from '../utils/getCorePlacement'
+import { getCorePlacement } from '@package/utils'
 import find from '../utils/find'
 import prefix from '../utils/prefix'
 

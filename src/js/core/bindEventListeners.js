@@ -5,7 +5,7 @@ import hideAllPoppers from './hideAllPoppers'
 import closest from '../utils/closest'
 import find from '../utils/find'
 import { matches } from '../utils/matches'
-import { CONTROLLER, POPPER, TOOLTIPPED_EL } from '../../selectors.ts'
+import { CONTROLLER, POPPER, TOOLTIPPED_EL } from '@package/selectors.ts'
 
 /**
 * Adds the needed event listeners

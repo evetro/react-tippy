@@ -1,10 +1,11 @@
 import { createPopperLite } from '@popperjs/core'
 
+import { TOOLTIP } from '@package/selectors.ts'
+import { getCorePlacement } from '@package/utils'
+
 import defer from '../utils/defer'
 import prefix from '../utils/prefix'
-import getCorePlacement from '../utils/getCorePlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
-import { TOOLTIP } from '../../selectors.ts'
 
 /**
 * Creates a new popper instance

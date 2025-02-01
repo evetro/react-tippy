@@ -38,7 +38,15 @@ export default defineConfig({
 			provider: 'v8',
 			enabled: true,
 			reporter: 'html',
-			include: ['src/**'],
+			include: [
+				'src/js/**',
+				'src/component.jsx',
+				'src/defaults.ts',
+				'src/selectors.ts',
+				'src/tippyFactory.ts',
+				'src/toggleEventListeners.ts',
+				'src/utils.ts'
+			],
 			reportOnFailure: true
 		},
 		include: ['test/**/*.test.ts?(x)'],

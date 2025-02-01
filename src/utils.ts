@@ -16,7 +16,7 @@ export function getCorePlacement(placement: string): string {
 * Returns an array of elements based on the selector input
 */
 export function getArrayOfElements(
-	selector?: string | Element | Element[] | NodeListOf<Element>
+	selector: string | Element | Element[] | NodeListOf<Element>
 ): Element[] {
 	if (selector instanceof Element) {
 		return [selector]

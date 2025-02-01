@@ -1,8 +1,7 @@
-import getCorePlacement from '../utils/getCorePlacement'
 import getOffsetDistanceInPx from '../utils/getOffsetDistanceInPx'
 
 import { ARROW, CIRCLE } from '@package/selectors'
-import { getAttributeName } from '@package/utils'
+import { getAttributeName, getCorePlacement } from '@package/utils'
 
 /**
 * Creates a popper element then returns it

@@ -1,5 +1,6 @@
 import Defaults from '@package/defaults.ts'
 import toggleEventListeners from '@package/toggleEventListeners.ts'
+import { getArrayOfElements } from '@package/utils.ts'
 
 import { Browser, Store } from './core/globals'
 import init from './core/init'
@@ -19,7 +20,6 @@ import isVisible from './utils/isVisible'
 /* Core library functions */
 import createPopperInstance from './core/createPopperInstance'
 import followCursorHandler from './core/followCursorHandler'
-import getArrayOfElements from './core/getArrayOfElements'
 import onTransitionEnd from './core/onTransitionEnd'
 import makeSticky from './core/makeSticky'
 import createTooltips from './core/createTooltips'

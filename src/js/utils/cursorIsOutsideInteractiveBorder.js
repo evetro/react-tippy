@@ -1,4 +1,4 @@
-import getCorePlacement from '../utils/getCorePlacement'
+import { getCorePlacement } from '@package/utils'
 
 /**
 * Determines if the mouse's cursor is outside the interactive border

@@ -57,10 +57,6 @@ describe('getCorePlacement module', () => {
 })
 
 describe('getArrayOfElements', () => {
-	it('returns an empty array with no arguments', () => {
-		expect(Array.isArray(getArrayOfElements())).toBe(true)
-	})
-
 	it('returns the same array if given an array', () => {
 		const arr = []
 		expect(getArrayOfElements(arr)).toBe(arr)

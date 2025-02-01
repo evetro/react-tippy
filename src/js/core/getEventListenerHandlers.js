@@ -3,7 +3,7 @@ import { Browser } from './globals'
 import isVisible from '../utils/isVisible'
 import closest from '../utils/closest'
 import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
-import { POPPER, TOOLTIPPED_EL } from '../../selectors.ts'
+import { POPPER, TOOLTIPPED_EL } from '@package/selectors.ts'
 
 /**
 * Returns relevant listener callbacks for each ref

@@ -1,4 +1,4 @@
-import { CONTENT, TOOLTIP, CIRCLE } from '../../selectors.ts'
+import { CONTENT, TOOLTIP, CIRCLE } from '@package/selectors.ts'
 
 /**
 * Returns inner elements of the popper element

@@ -1,6 +1,6 @@
 import prefix from './prefix'
 import { matches } from './matches'
-import { CONTENT } from '../../selectors.ts'
+import { CONTENT } from '@package/selectors.ts'
 
 /**
 * Applies the transition duration to each element

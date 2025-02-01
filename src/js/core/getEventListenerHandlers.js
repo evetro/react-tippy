@@ -2,8 +2,8 @@ import { Browser } from './globals'
 
 import isVisible from '../utils/isVisible'
 import closest from '../utils/closest'
-import cursorIsOutsideInteractiveBorder from '../utils/cursorIsOutsideInteractiveBorder'
 import { POPPER, TOOLTIPPED_EL } from '@package/selectors.ts'
+import { getCorePlacement } from '@package/utils'
 
 /**
 * Returns relevant listener callbacks for each ref
@@ -149,4 +149,46 @@ export default function getEventListenerHandlers(el, popper, settings) {
     handleMouseleave,
     handleBlur
   }
+}
+
+/**
+* Determines if the mouse's cursor is outside the interactive border
+* @param {MouseEvent} event
+* @param {Element} popper
+* @param {Object} settings
+* @return {Boolean}
+*/
+function cursorIsOutsideInteractiveBorder(event, popper, settings) {
+  if (!popper.getAttribute('data-popper-placement')) return true
+
+  const { clientX: x, clientY: y } = event
+  const { interactiveBorder, distance } = settings
+
+  const rect = popper.getBoundingClientRect()
+  const corePosition = getCorePlacement(popper.getAttribute('data-popper-placement'))
+  const borderWithDistance = interactiveBorder + distance
+
+  const exceeds = {
+    top: rect.top - y > interactiveBorder,
+    bottom: y - rect.bottom > interactiveBorder,
+    left: rect.left - x > interactiveBorder,
+    right: x - rect.right > interactiveBorder
+  }
+
+  switch (corePosition) {
+    case 'top':
+      exceeds.top = rect.top - y > borderWithDistance
+      break
+    case 'bottom':
+      exceeds.bottom = y - rect.bottom > borderWithDistance
+      break
+    case 'left':
+      exceeds.left = rect.left - x > borderWithDistance
+      break
+    case 'right':
+      exceeds.right = x - rect.right > borderWithDistance
+      break
+  }
+
+  return exceeds.top || exceeds.bottom || exceeds.left || exceeds.right
 }

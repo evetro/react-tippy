@@ -8,6 +8,7 @@ import { getAttributeName } from '@package/utils'
 import { fireEvent } from '@testing-library/dom'
 
 import createNewElement from './createNewElement'
+import { Position } from '@package/types'
 
 let instance: Tippy | null | undefined
 
@@ -523,5 +524,196 @@ describe('animateFill', () => {
 		instance.show(instance.store[0].popper)
 		vi.runAllTimers()
 		expect(instance?.store?.[0]?.popper?.innerHTML?.includes?.('leave')).toBe(false)
+	})
+})
+
+describe.skip('followCursor, headless', () => {
+	// NOTE: the simulated window dimensions are 1024 x 768. These values
+	// should be within that
+	const defaultPosition = { clientX: 1, clientY: 1 }
+
+	const first = { clientX: 317, clientY: 119 }
+	const second = { clientX: 240, clientY: 500 }
+
+	const placements: Position[] = ['top', 'bottom', 'left', 'right']
+
+	let rect: DOMRect
+
+	const match = (
+		top: number,
+		bottom: number,
+		left: number,
+		right: number
+	) => {
+		/* const isVerticalPlacement = ['top', 'bottom'].includes(
+			instance.store[0].popperInstance.state.placement.split('-')[0]
+		)
+
+		expect(isVerticalPlacement).toBe(true) */
+		expect(rect.top).toBe(top)
+		expect(rect.bottom).toBe(bottom)
+		expect(rect.left).toBe(left)
+		expect(rect.right).toBe(right)
+	}
+
+	it('true: follows both axes', () => {
+		placements.forEach((position) => {
+			instance = tippyFactory(createNewElement(), { followCursor: true, position })
+
+			fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
+
+			vi.runAllTimers()
+
+			fireEvent.mouseMove(instance.store[0].el, first)
+			rect = instance.store[0].el.getBoundingClientRect()
+			match(
+				first.clientY,
+				first.clientY,
+				first.clientX,
+				first.clientX
+			)
+
+			fireEvent.mouseMove(instance.store[0].el, second)
+			rect = instance.store[0].el.getBoundingClientRect()
+			match(
+				second.clientY,
+				second.clientY,
+				second.clientX,
+				second.clientX
+			)
+		})
+	})
+
+	it('is at correct position after a delay', () => {
+		instance = tippyFactory(createNewElement(), { followCursor: true, delay: 100 })
+
+		fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
+
+		vi.runAllTimers()
+
+		fireEvent.mouseMove(instance.store[0].el, first)
+
+		vi.advanceTimersByTime(100)
+
+		rect = instance.store[0].el.getBoundingClientRect()
+
+		match(
+			first.clientY,
+			first.clientY,
+			first.clientX,
+			first.clientX
+		)
+	})
+
+	it('is at correct position after a content update', () => {
+		instance = tippyFactory(createNewElement(), { followCursor: true })
+
+		fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
+
+		vi.runAllTimers()
+
+		fireEvent.mouseMove(instance.store[0].el, first)
+
+		rect = instance.store[0].el.getBoundingClientRect()
+
+		match(
+			first.clientY,
+			first.clientY,
+			first.clientX,
+			first.clientX
+		)
+
+		instance.updateSettings(instance.store[0].popper, 'title', 'hello')
+		instance.store[0].el.setAttribute('title', 'hello')
+
+		vi.runAllTimers()
+
+		rect = instance.store[0].el.getBoundingClientRect()
+
+		match(
+			first.clientY,
+			first.clientY,
+			first.clientX,
+			first.clientX
+		)
+	})
+
+	it('does not continue to follow if interactive: true and cursor is over popper', () => {
+		instance = tippyFactory(createNewElement(), {
+			followCursor: true,
+			interactive: true
+		})
+
+		fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
+
+		vi.runAllTimers()
+
+		fireEvent.mouseMove(instance.store[0].el, first)
+
+		rect = instance.store[0].el.getBoundingClientRect()
+		const { top, bottom } = rect
+
+		fireEvent.mouseMove(instance.store[0].el, second)
+
+		match(
+			top,
+			bottom,
+			first.clientX,
+			first.clientX
+		)
+	})
+
+	it('should reset popperInstance.reference if triggered by `focus`', () => {
+		instance = tippyFactory(createNewElement(), {
+			followCursor: true,
+			delay: 1000
+		})
+
+		fireEvent.mouseEnter(instance.store[0].el, defaultPosition)
+
+		vi.runAllTimers()
+
+		fireEvent.mouseMove(instance.store[0].el, first)
+		fireEvent.mouseLeave(instance.store[0].el)
+
+		fireEvent.mouseMove(instance.store[0].el, second)
+
+		instance.hide(instance.store[0].popper)
+
+		fireEvent.focus(instance.store[0].el)
+
+		expect(instance.settings.getReferenceClientRect).toBe(undefined) // nb: always true kek
+	})
+
+	it('works with manual trigger and .show()', () => {
+		instance = tippyFactory(createNewElement(), {
+			followCursor: true,
+			trigger: 'manual'
+		})
+
+		instance.show(instance.store[0].popper)
+		vi.runAllTimers()
+
+		fireEvent.mouseMove(document, first)
+
+		rect = instance.store[0].el.getBoundingClientRect()
+		// TODO new instance method for getting bounding client rect on a popper element
+
+		match(
+			first.clientY,
+			first.clientY,
+			first.clientX,
+			first.clientX
+		)
+	})
+
+	it('is cleaned up if untriggered before showing', () => {
+		instance = tippyFactory(createNewElement(), { followCursor: true, delay: 100 })
+
+		fireEvent.mouseEnter(instance.store[0].el, first)
+		fireEvent.mouseLeave(instance.store[0].el)
+		fireEvent.mouseMove(instance.store[0].el, second)
+
+		expect(instance.settings.getReferenceClientRect).toBe(undefined) // nb: always true kek
 	})
 })

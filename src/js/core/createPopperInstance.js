@@ -1,4 +1,4 @@
-import { createPopperLite } from '@popperjs/core'
+import { createPopper } from '@popperjs/core/lib/popper-lite'
 
 import { TOOLTIP } from '@package/selectors.ts'
 import { getCorePlacement } from '@package/utils'
@@ -20,6 +20,7 @@ export default function createPopperInstance(data) {
       position,
       offset,
       distance,
+      followCursor, // TODO implement handling the option here
       flipModifierOptions,
       flipDuration
     }
@@ -97,5 +98,5 @@ export default function createPopperInstance(data) {
     data._mutationObserver = observer
   }
 
-  return createPopperLite(el, popper, { placement: position, modifiers })
+  return createPopper(el, popper, { placement: position, modifiers })
 }

@@ -47,4 +47,4 @@ version 2.
 
 ## `followCursor` option: use virtual element on Popper instead of translate3d styling edits
 
-The virtual element will be the new parameter for the popper constructor. The `selector` in the class constructor here will then become the DOM context (this will work, trust). Though will it work for touch events? Guide: https://popper.js.org/docs/v2/virtual-elements/#usage
+The virtual element will be the new parameter for the popper constructor. The `selector` in the class constructor here will then become the DOM context of the popper instance (this will work, trust). Though will it work for touch events? Guide: https://popper.js.org/docs/v2/virtual-elements/#usage

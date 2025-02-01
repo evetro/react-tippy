@@ -36,7 +36,6 @@ export default Object.freeze({
 }) as TippyOptions
 
 export interface TippyOptions extends Partial<TooltipProps> {
-	open: boolean | undefined
 	html?: undefined | HTMLElement
 	children?: never
 	className?: never

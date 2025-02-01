@@ -51,7 +51,7 @@ export interface TooltipProps {
 	onRequestClose?: () => void
 	onShow?: () => void
 	onShown?: () => void
-	open: boolean | undefined
+	open?: boolean | undefined
 	flipModifierOptions?: FlipModifierOptions
 	position?: Position
 	size?: Size

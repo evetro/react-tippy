@@ -316,6 +316,75 @@ describe('<Tippy />', () => {
 		expect(getByRole('tooltip').querySelector('strong')).not.toBeNull()
 	})
 
+	it('`unmountHTMLWhenHide` prop is set', () => {
+		const { rerender, queryAllByRole } = render(
+			<Tippy html={<>Tooltip</>} open unmountHTMLWhenHide>
+				<button />
+			</Tippy>
+		)
+		vi.runAllTimers()
+
+		expect(queryAllByRole('tooltip').length).toBe(1)
+
+		rerender(
+			<Tippy html={<>Tooltip</>} open={false} unmountHTMLWhenHide>
+				<button />
+			</Tippy>
+		)
+		vi.runAllTimers()
+
+		expect(queryAllByRole('tooltip').length).toBe(0)
+	})
+
+	it('changing value of `html` prop', () => {
+		const { container, getByRole, rerender } = render(
+			<Tippy html={<strong>Tooltip</strong>}>
+				<button />
+			</Tippy>
+		)
+
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
+
+		expect(getByRole('tooltip').querySelector('strong')).not.toBeNull()
+		expect(getByRole('tooltip').querySelector('em')).toBeNull()
+		
+		rerender(
+			<Tippy html={<em>Tooltip</em>}>
+				<button />
+			</Tippy>
+		)
+
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
+
+		expect(getByRole('tooltip').querySelector('strong')).toBeNull()
+		expect(getByRole('tooltip').querySelector('em')).not.toBeNull()
+	})
+
+	it('changing value of `html` prop 2', () => {
+		const { getByRole, rerender, queryAllByRole } = render(
+			<Tippy trigger="manual" open={false} html={<strong>The Tooltip</strong>}>
+				<button>Booten</button>
+			</Tippy>
+		)
+
+		vi.runAllTimers()
+
+		expect(queryAllByRole('tooltip').length).toBe(0)
+		
+		rerender(
+			<Tippy trigger="manual" open={true} html={<em>The Tooltip</em>}>
+				<button>Button Element</button>
+			</Tippy>
+		)
+
+		vi.runAllTimers()
+
+		expect(getByRole('tooltip').querySelector('strong')).toBeNull()
+		expect(getByRole('tooltip').querySelector('em')).not.toBeNull()
+	})
+
 	it('if "disabled" is initially set to `false`', () => {
 		const { container, rerender, getByRole, queryAllByRole, queryAllByText } = render(
 			<Tippy title="Tooltip F" disabled={false}>
@@ -343,15 +412,15 @@ describe('<Tippy />', () => {
 
 	it('unmount destroys the tippy instance and allows garbage collection', () => {
 		const { container, unmount, queryAllByRole } = render(
-			<Tippy title="Tooltip D">
+			<Tippy title="Tooltip D" open>
 				<button />
 			</Tippy>
 		)
 
-		expect(container.querySelectorAll('button').length).toBe(1)
-
-		fireEvent.mouseEnter(container.childNodes[0])
 		vi.runAllTimers()
+
+		expect(container.querySelectorAll('button').length).toBe(1)
+		expect(queryAllByRole('tooltip').length).toBe(1)
 
 		unmount()
 

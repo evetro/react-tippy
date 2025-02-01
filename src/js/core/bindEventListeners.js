@@ -3,7 +3,6 @@ import { Browser, Store, setBrowserTouch } from './globals'
 import hideAllPoppers from './hideAllPoppers'
 
 import closest from '../utils/closest'
-import find from '../utils/find'
 import { matches } from '../utils/matches'
 import { CONTROLLER, POPPER, TOOLTIPPED_EL } from '@package/selectors.ts'
 
@@ -52,7 +51,7 @@ export default function bindEventListeners() {
     const popper = closest(event.target, POPPER)
 
     if (popper) {
-      const data = find(Store, d => d.popper === popper)
+      const data = Store.find(d => d.popper === popper)
       if (!data) {
         return
       }
@@ -64,7 +63,7 @@ export default function bindEventListeners() {
     }
 
     if (el) {
-      const data = find(Store, d => d.el === el)
+      const data = Store.find(d => d.el === el)
       if (!data) {
         return
       }

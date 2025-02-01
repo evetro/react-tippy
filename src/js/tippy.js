@@ -7,8 +7,6 @@ import init from './core/init'
 
 /* Utility functions */
 import defer from './utils/defer'
-import find from './utils/find'
-import findIndex from './utils/findIndex'
 import removeTitle from './utils/removeTitle'
 import elementIsInViewport from './utils/elementIsInViewport'
 import triggerReflow from './utils/triggerReflow'
@@ -65,7 +63,7 @@ export default class Tippy {
   */
   getPopperElement(el) {
     try {
-      return find(this.store, d => d.el === el).popper
+      return this.store.find(d => d.el === el).popper
     } catch (e) {
       console.error('[getPopperElement]: Element passed as the argument does not exist in the instance')
     }
@@ -78,7 +76,7 @@ export default class Tippy {
   */
   getReferenceElement(popper) {
     try {
-      return find(this.store, d => d.popper === popper).el
+      return this.store.find(d => d.popper === popper).el
     } catch (e) {
       console.error('[getReferenceElement]: Popper passed as the argument does not exist in the instance')
     }
@@ -90,7 +88,7 @@ export default class Tippy {
   * @return {Object}
   */
   getReferenceData(ref) {
-    return find(this.store, d => d.el === ref || d.popper === ref)
+    return this.store.find(d => d.el === ref || d.popper === ref)
   }
 
   /**
@@ -99,8 +97,8 @@ export default class Tippy {
   */
   enable(popper) {
     this.updateSettings(popper, 'disabled', false)
-    find(
-      this.store, d => d.popper === popper
+    this.store.find(
+      d => d.popper === popper
     )?.el?.setAttribute?.('disabled', '')
   }
 
@@ -110,8 +108,8 @@ export default class Tippy {
   */
   disable(popper) {
     this.updateSettings(popper, 'disabled', true)
-    find(
-      this.store, d => d.popper === popper
+    this.store.find(
+      d => d.popper === popper
     )?.el?.setAttribute?.('disabled', 'disabled')
     if (isVisible(popper)) this.hide(popper)
   }
@@ -123,7 +121,7 @@ export default class Tippy {
   * @param {string} - value
   */
   updateSettings(popper, name, value) {
-    const data = find(this.store, d => d.popper === popper)
+    const data = this.store.find(d => d.popper === popper)
     if (!data) return
 
     const newSettings = {
@@ -150,7 +148,7 @@ export default class Tippy {
   show(popper, customDuration = undefined) {
     if (this.destroyed || isVisible(popper)) return
 
-    const data = find(this.store, d => d.popper === popper)
+    const data = this.store.find(d => d.popper === popper)
     if (!data) return
     if (data?.el.getAttribute?.('disabled') === 'disabled') return
 
@@ -289,7 +287,7 @@ export default class Tippy {
 
     this.callbacks.hide?.call?.(popper)
 
-    const data = find(this.store, d => d.popper === popper)
+    const data = this.store.find(d => d.popper === popper)
     if (!data) return;
 
     const { tooltip, circle, content } = getInnerElements(popper)
@@ -378,7 +376,7 @@ export default class Tippy {
   update(popper) {
     if (this.destroyed) return
 
-    const data = find(this.store, d => d.popper === popper)
+    const data = this.store.find(d => d.popper === popper)
     if (!data) return;
 
     const { content } = getInnerElements(popper)
@@ -400,7 +398,7 @@ export default class Tippy {
   */
   destroy(popper) {
     if (this.destroyed) return
-    const data = find(this.store, d => d.popper === popper)
+    const data = this.store.find(d => d.popper === popper)
     if (!data) return;
 
     const {
@@ -432,7 +430,7 @@ export default class Tippy {
     _mutationObserver?.disconnect?.()
 
     // Remove from store
-    Store.splice(findIndex(Store, d => d.popper === popper), 1)
+    Store.splice(Store.findIndex(d => d.popper === popper), 1)
   }
 
   /**

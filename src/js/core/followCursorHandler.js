@@ -1,7 +1,6 @@
 import { Store } from './globals'
 
 import { getCorePlacement } from '@package/utils'
-import find from '../utils/find'
 import prefix from '../utils/prefix'
 
 /**
@@ -9,7 +8,7 @@ import prefix from '../utils/prefix'
 * @param {MouseEvent} e
 */
 export default function followCursorHandler(e) {
-  const refData = find(Store, refData => refData.el === this)
+  const refData = Store.find(refData => refData.el === this)
   if (!refData) return;
 
   const {

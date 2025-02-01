@@ -16,12 +16,12 @@ import modifyClassList from './utils/modifyClassList'
 import getInnerElements from './utils/getInnerElements'
 import applyTransitionDuration from './utils/applyTransitionDuration'
 import isVisible from './utils/isVisible'
+import prefix from './utils/prefix'
 
 /* Core library functions */
 import createPopperInstance from './core/createPopperInstance'
 import followCursorHandler from './core/followCursorHandler'
 import onTransitionEnd from './core/onTransitionEnd'
-import makeSticky from './core/makeSticky'
 import createTooltips from './core/createTooltips'
 import evaluateSettings from './core/evaluateSettings'
 
@@ -168,8 +168,10 @@ export default class Tippy {
     }
 
     const {
+      popperInstance,
       el,
       settings: {
+        stickyDuration,
         appendTo,
         renderVirtualDom,
         sticky,
@@ -196,18 +198,18 @@ export default class Tippy {
       */
       appendTo.appendChild(popper)
   
-      if (!data.popperInstance) {
+      if (!popperInstance) {
         data.popperInstance = createPopperInstance(data)
       } else {
-        data.popperInstance.forceUpdate()
+        popperInstance.forceUpdate()
       }
   
       // Since touch is determined dynamically, followCursor is set on mount
       if (followCursor && !Browser.touch) {
         el.addEventListener('mousemove', followCursorHandler)
-        toggleEventListeners(data.popperInstance)
+        toggleEventListeners(popperInstance)
       } else {
-        toggleEventListeners(data.popperInstance, true)
+        toggleEventListeners(popperInstance, true)
       }
     }
 
@@ -219,7 +221,7 @@ export default class Tippy {
     const fn = () => {
       // Sometimes the arrow will not be in the correct position, force another update
       if (!followCursor || Browser.touch) {
-        data.popperInstance?.forceUpdate?.()
+        popperInstance?.forceUpdate?.()
         applyTransitionDuration([popper], flipDuration)
       }
 
@@ -234,9 +236,16 @@ export default class Tippy {
         el.classList.add('active')
       }
 
-      // Update popper's position on every animation frame
       if (sticky) {
-        makeSticky(data)
+        const updatePosition = () => {
+          popperInstance?.update?.()
+          popper.style[prefix('transitionDuration')] = `${stickyDuration}ms`
+          if (!isVisible(popper)) {
+            popper.style[prefix('transitionDuration')] = ''
+          }
+        }
+        // Wait until Popper's position has been updated initially
+        defer(updatePosition)
       }
 
       // Repaint/reflow is required for CSS transition when appending

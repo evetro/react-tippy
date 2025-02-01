@@ -79,7 +79,6 @@ export default function createPopperInstance(data) {
   }]
 
   // Update the popper's position whenever its content changes
-  // Not supported in IE10 unless polyfilled
   if (window?.MutationObserver) {
     const observer = new MutationObserver(() => {
       popper.style[prefix('transitionDuration')] = '0ms'

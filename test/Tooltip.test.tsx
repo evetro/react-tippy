@@ -209,7 +209,7 @@ describe('<Tippy />', () => {
 		expect(container.querySelectorAll(`div[data-original-title="tooltip"]`).length).toBe(3)
 	})
 
-	it('will not call console.warn', () => {
+	it('turning off both open and hideonclick is dubious, but permissible', () => {
 		const spy = vi.spyOn(console, 'warn')
 
 		render(
@@ -467,5 +467,18 @@ describe('<Tippy />', () => {
 		vi.runAllTimers()
 
 		expect(queryAllByText('Tooltip A').length).toBe(1)
+	})
+
+	it('`sticky` prop', () => {
+		const { container, getByRole } = render(
+			<Tippy title="Tooltip" sticky stickyDuration={500}>
+				<button />
+			</Tippy>
+		)
+
+		fireEvent.mouseEnter(container.childNodes[0])
+		vi.runAllTimers()
+
+		expect(getData(getByRole('tooltip')).popper.style.transitionDuration).toBe('500ms')
 	})
 })
